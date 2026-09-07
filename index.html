@@ -1172,6 +1172,13 @@ Grade 5 Educator</textarea>
     // MODULE 6: QUIZ & TEST BUILDER
     // ==========================================
     let showQuizAnswers = false;
+    let quizQuestions = [
+      { id:'q-1', type:'mcq', question:'Which organelle inside plant cells contains chlorophyll and carries out photosynthesis?', options:['A) Mitochondria','B) Chloroplast','C) Nucleus','D) Cell Wall'], answer:'B) Chloroplast', rationale:'Chloroplasts contain chlorophyll, the green pigment that absorbs sunlight for photosynthesis.', points:4 },
+      { id:'q-2', type:'mcq', question:'What essential gas do plants release into the atmosphere as a byproduct of photosynthesis?', options:['A) Carbon Dioxide','B) Nitrogen','C) Oxygen','D) Hydrogen'], answer:'C) Oxygen', rationale:'During photosynthesis, plants take in carbon dioxide and release oxygen.', points:4 },
+      { id:'q-3', type:'fill', question:'Organisms that break down dead plants and animals and return nutrients to the soil are called ______________.', answer:'Decomposers (fungi and bacteria)', rationale:'Decomposers recycle matter back into the ecosystem.', points:4 },
+      { id:'q-4', type:'fill', question:'Plants convert sunlight, water, and carbon dioxide into a sugar called ______________ for food.', answer:'Glucose', rationale:'Glucose is the simple sugar used by plants for cellular energy.', points:4 },
+      { id:'q-5', type:'short', question:'Explain why herbivores and carnivores depend on photosynthesis, even though they cannot perform it themselves.', answer:'Herbivores eat plants to gain energy from photosynthesis. Carnivores eat herbivores. Without photosynthesis, the food web collapses.', rationale:'Expect students to explain energy transfer through trophic levels.', points:4 }
+    ];
     function renderQuiz() {
       const container = document.getElementById('quiz-questions-list');
       if (!container) return;
@@ -1388,6 +1395,12 @@ For fill type omit options. For short type omit options.`;
       const canvas = document.getElementById('quiz-canvas');
       const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>${title}</title><style>body{font-family:Calibri,Arial;font-size:11pt;padding:20px;}h1{color:#6b21a8;}</style></head><body><h1>${title}</h1><p>Teacher Albejean I. Rosabe</p>${canvas ? canvas.innerHTML : ''}</body></html>`;
       downloadFile(html, `${title.replace(/\s+/g,'_')}_Quiz.doc`, 'application/msword;charset=utf-8');
+    }
+
+    // ==========================================
+    // MODULE 7: VISUAL HELPERS & DIAGRAMS
+    // ==========================================
+    let currentDiagramType = 'cycle';
     let currentDiagramColor = 'emerald';
     let currentDiagramTitle = "The Water Cycle: Earth's Continuous Journey";
 
