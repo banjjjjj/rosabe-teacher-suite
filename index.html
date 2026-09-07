@@ -93,7 +93,13 @@
           <i data-lucide="table" class="w-4 h-4 text-slate-400"></i> Interactive Rubrics
         </button>
         <button onclick="switchTab('communication')" id="nav-communication" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
-          <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i> Parent Communication
+          <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i> Communication
+        </button>
+        <button onclick="switchTab('quiz-builder')" id="nav-quiz-builder" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="help-circle" class="w-4 h-4 text-slate-400"></i> Quiz &amp; Test Maker
+        </button>
+        <button onclick="switchTab('visual-helpers')" id="nav-visual-helpers" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="image" class="w-4 h-4 text-slate-400"></i> Visual Helpers &amp; Diagrams
         </button>
       </nav>
     </div>
@@ -152,7 +158,7 @@
       </div>
 
       <!-- Module Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-emerald-300 transition-all flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
@@ -188,7 +194,7 @@
             </p>
           </div>
           <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-            <span class="text-xs text-slate-400">Word (.doc) & PDF</span>
+            <span class="text-xs text-slate-400">Word (.doc) &amp; PDF</span>
             <button onclick="switchTab('lesson-plans')" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors">
               Open &rarr;
             </button>
@@ -209,7 +215,7 @@
             </p>
           </div>
           <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-            <span class="text-xs text-slate-400">CSV & Word</span>
+            <span class="text-xs text-slate-400">CSV &amp; Word</span>
             <button onclick="switchTab('rubrics')" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-colors">
               Open &rarr;
             </button>
@@ -233,6 +239,50 @@
             <span class="text-xs text-slate-400">1-Click Clipboard</span>
             <button onclick="switchTab('communication')" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors">
               Open &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- NEW: QUIZ & TEST CREATION -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-purple-300 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center">
+                <i data-lucide="help-circle" class="w-6 h-6"></i>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">Auto-Question Generator</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Quiz &amp; Test Creator</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              Generate Multiple-Choice, Fill-in-the-Blank, and Short-Answer questions from text snippets or transcripts. Includes printable answer keys.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400">Student &amp; Key Views</span>
+            <button onclick="switchTab('quiz-builder')" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-colors">
+              Open Quiz Maker &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- NEW: VISUAL HELPERS & DIAGRAM STUDIO -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-rose-300 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center">
+                <i data-lucide="image" class="w-6 h-6"></i>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">Royalty-Free Visuals</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Visual Helpers &amp; Diagrams</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              Create custom, non-copyrighted vector illustrations — cycles, plot mountains, Venn diagrams, and fraction models. 1-click SVG download for PowerPoint or Slides.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400">Slides &amp; Worksheets</span>
+            <button onclick="switchTab('visual-helpers')" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors">
+              Open Visual Studio &rarr;
             </button>
           </div>
         </div>
@@ -553,6 +603,193 @@ Grade 5 Educator</textarea>
         </div>
       </div>
     </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 6: QUIZ & TEST CREATOR -->
+    <!-- ============================================================= -->
+    <section id="tab-quiz-builder" class="tab-content space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div class="flex items-center gap-2">
+          <span class="p-2 rounded-xl bg-purple-100 text-purple-800">
+            <i data-lucide="help-circle" class="w-5 h-5 text-purple-700"></i>
+          </span>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Quiz &amp; Test Creation Engine</h2>
+            <p class="text-xs text-slate-500">Teacher Albejean I. Rosabe &bull; Generate MCQ, Fill-in-the-Blank &amp; Short-Answer from Text</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="toggleQuizAnswerKey()" id="btn-toggle-key" class="px-3.5 py-2 bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-800 font-semibold text-xs rounded-lg flex items-center gap-1.5 transition-all">
+            <i data-lucide="eye" class="w-3.5 h-3.5"></i> <span id="key-btn-text">Show Answer Key</span>
+          </button>
+          <button onclick="window.print()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-600"></i> Print Test Paper
+          </button>
+          <button onclick="exportQuizWord()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-slate-600"></i> Export Word (.doc)
+          </button>
+          <button onclick="addNewQuizQuestion()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Question
+          </button>
+        </div>
+      </div>
+
+      <!-- Generator Input Box -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs no-print space-y-4">
+        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Generate From Text Snippet or Transcript</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Assessment Title</label>
+            <input type="text" id="qz-title-input" value="Grade 5 Science: Photosynthesis &amp; Ecosystem Energy Flow" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+          </div>
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Question Type Mix</label>
+            <select id="qz-type-select" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 bg-white">
+              <option value="mixed">Mixed Assessment (MCQ + Blanks + Short Answer)</option>
+              <option value="mcq">Multiple-Choice Only (A, B, C, D)</option>
+              <option value="fill">Fill-in-the-Blank Only</option>
+              <option value="short">Short Answer Only</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Number of Questions</label>
+            <select id="qz-count-select" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 bg-white">
+              <option value="5">5 Comprehensive Questions</option>
+              <option value="8">8 In-depth Questions</option>
+              <option value="3">3 Quick Exit Check Questions</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-medium text-slate-600 block mb-1">Paste Lesson Text, Chapter Snippet, or Video Transcript</label>
+          <textarea id="qz-source-text" rows="4" class="w-full text-xs p-3 rounded-xl border border-slate-300 focus:border-purple-500 font-sans" placeholder="Paste your reading excerpt or transcript here...">Plants are primary producers that make their own food through photosynthesis using sunlight, carbon dioxide from the air, and water from the soil. In plant cells, chloroplasts contain chlorophyll, the green pigment that absorbs light energy. Photosynthesis produces glucose, which feeds the plant, and releases oxygen into the atmosphere. Herbivores consume plants for energy, and carnivores consume other animals. Decomposers, such as fungi and bacteria, break down dead organisms and return nutrients to the soil.</textarea>
+        </div>
+        <button onclick="generateQuizFromText()" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm">
+          <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i> Synthesize Quiz &amp; Answer Key
+        </button>
+      </div>
+
+      <!-- Printable Quiz Canvas -->
+      <div id="quiz-canvas" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-10 space-y-6">
+        <div class="border-b-2 border-slate-800 pb-4 space-y-4">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>Teacher: <strong>Teacher Albejean I. Rosabe</strong></span>
+            <span>Date: ____________________</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <div contenteditable="true" id="qz-title-display" class="editable-cell text-xl sm:text-2xl font-extrabold text-slate-900 p-1 rounded-lg">
+                Grade 5 Science: Photosynthesis &amp; Ecosystem Energy Flow
+              </div>
+              <p class="text-xs text-slate-500 px-1 mt-0.5">Directions: Read each question carefully and write your answers neatly.</p>
+            </div>
+            <div class="text-right text-xs">
+              <span class="block font-semibold">Student Name: _____________________</span>
+              <span class="block text-slate-500 mt-1">Score: ______ / <span id="qz-total-pts">20</span></span>
+            </div>
+          </div>
+        </div>
+        <!-- Questions List Container -->
+        <div id="quiz-questions-list" class="space-y-6"></div>
+        <div class="pt-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-400">
+          <span>Prepared by Teacher Albejean I. Rosabe</span>
+          <span>End of Assessment</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 7: VISUAL HELPERS & DIAGRAM STUDIO -->
+    <!-- ============================================================= -->
+    <section id="tab-visual-helpers" class="tab-content space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div class="flex items-center gap-2">
+          <span class="p-2 rounded-xl bg-rose-100 text-rose-800">
+            <i data-lucide="image" class="w-5 h-5 text-rose-700"></i>
+          </span>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Visual Helpers &amp; Educational Diagram Studio</h2>
+            <p class="text-xs text-slate-500">Teacher Albejean I. Rosabe &bull; Non-Copyrighted Illustrations for Slides &amp; Worksheets</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="downloadVisualSVG()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-slate-600"></i> Download SVG Vector
+          </button>
+          <button onclick="window.print()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-600"></i> Print Visual
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Visual Generator Sidebar -->
+        <div class="lg:col-span-4 space-y-4 no-print">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Choose Diagram Template</h3>
+            <div class="space-y-2">
+              <button onclick="selectDiagramType('cycle')" class="w-full text-left p-3 rounded-xl border border-emerald-200 hover:bg-emerald-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="refresh-cw" class="w-4 h-4 text-emerald-600"></i> 4-Stage Cycle Diagram (e.g. Life/Water Cycle)</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+              <button onclick="selectDiagramType('plot')" class="w-full text-left p-3 rounded-xl border border-blue-200 hover:bg-blue-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="mountain" class="w-4 h-4 text-blue-600"></i> Story Plot Mountain (Hook &rarr; Climax &rarr; End)</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+              <button onclick="selectDiagramType('venn')" class="w-full text-left p-3 rounded-xl border border-indigo-200 hover:bg-indigo-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="git-merge" class="w-4 h-4 text-indigo-600"></i> Venn Diagram (Compare &amp; Contrast)</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+              <button onclick="selectDiagramType('fractions')" class="w-full text-left p-3 rounded-xl border border-amber-200 hover:bg-amber-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-amber-600"></i> Math Fractions Visualizer (Halves, 4ths, 8ths)</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+              <button onclick="selectDiagramType('anchor')" class="w-full text-left p-3 rounded-xl border border-rose-200 hover:bg-rose-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="award" class="w-4 h-4 text-rose-600"></i> Classroom Anchor Chart &amp; Goal Banner</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+            </div>
+            <div class="pt-2 border-t border-slate-100 space-y-3">
+              <div>
+                <label class="text-xs font-medium text-slate-600 block mb-1">Diagram Title (Editable)</label>
+                <input type="text" id="diag-title-input" value="The Water Cycle: Earth's Continuous Journey" oninput="updateDiagramTitle(this.value)" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+              </div>
+              <div>
+                <label class="text-xs font-medium text-slate-600 block mb-1">Color Palette</label>
+                <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                  <button onclick="setDiagramColor('emerald')" class="p-2 rounded-lg bg-emerald-600 text-white font-bold">Green</button>
+                  <button onclick="setDiagramColor('blue')" class="p-2 rounded-lg bg-blue-600 text-white font-bold">Blue</button>
+                  <button onclick="setDiagramColor('purple')" class="p-2 rounded-lg bg-purple-600 text-white font-bold">Purple</button>
+                  <button onclick="setDiagramColor('amber')" class="p-2 rounded-lg bg-amber-600 text-white font-bold">Amber</button>
+                </div>
+              </div>
+            </div>
+            <div class="p-3 bg-rose-50/60 rounded-xl border border-rose-200 text-rose-900 text-xs leading-relaxed">
+              <strong>100% Non-Copyrighted:</strong> Generated as clean SVG vector graphics. Perfect to insert into PowerPoint, Google Slides, Canva, and printed worksheets.
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Canvas View -->
+        <div class="lg:col-span-8 space-y-4">
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-4 flex flex-col items-center">
+            <div class="w-full flex items-center justify-between border-b border-slate-100 pb-3">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">Vector SVG Diagram Studio</span>
+              <span class="text-xs text-slate-400">Crisp at Any Zoom &bull; Print Ready</span>
+            </div>
+            <!-- SVG Container -->
+            <div id="svg-render-container" class="w-full max-w-2xl bg-slate-50/70 p-4 rounded-2xl border border-slate-200 flex justify-center items-center min-h-96">
+              <!-- Dynamic SVG renders here -->
+            </div>
+            <div class="w-full flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+              <span>Teacher: <strong>Teacher Albejean I. Rosabe</strong></span>
+              <span>Click Download SVG to use in PowerPoint / Google Slides</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 no-print mt-auto">
@@ -901,14 +1138,261 @@ Grade 5 Educator</textarea>
       URL.revokeObjectURL(url);
     }
 
+
+    // ==========================================
+    // MODULE 6: QUIZ & TEST BUILDER
+    // ==========================================
+    let showQuizAnswers = false;
+    let quizQuestions = [
+      { id:'q-1', type:'mcq', question:'Which organelle inside plant cells contains chlorophyll and carries out photosynthesis?', options:['A) Mitochondria','B) Chloroplast','C) Nucleus','D) Cell Wall'], answer:'B) Chloroplast', rationale:'Chloroplasts contain chlorophyll, the green pigment that absorbs sunlight for photosynthesis.', points:4 },
+      { id:'q-2', type:'mcq', question:'What essential gas do plants release into the atmosphere as a byproduct of photosynthesis?', options:['A) Carbon Dioxide','B) Nitrogen','C) Oxygen','D) Hydrogen'], answer:'C) Oxygen', rationale:'During photosynthesis, plants take in carbon dioxide and release oxygen.', points:4 },
+      { id:'q-3', type:'fill', question:'Organisms that break down dead plants and animals and return nutrients to the soil are called ______________.', answer:'Decomposers (fungi and bacteria)', rationale:'Decomposers recycle matter back into the ecosystem.', points:4 },
+      { id:'q-4', type:'fill', question:'Plants convert sunlight, water, and carbon dioxide into a sugar called ______________ for food.', answer:'Glucose', rationale:'Glucose is the simple sugar used by plants for cellular energy.', points:4 },
+      { id:'q-5', type:'short', question:'Explain why herbivores and carnivores depend on photosynthesis, even though they cannot perform it themselves.', answer:'Herbivores eat plants directly to gain energy originating from photosynthesis. Carnivores eat herbivores that depend on plants. Without photosynthesis, the foundational energy of the entire food web would collapse.', rationale:'Expect students to explain the transfer of energy through trophic levels.', points:4 }
+    ];
+
+    function renderQuiz() {
+      const container = document.getElementById('quiz-questions-list');
+      if (!container) return;
+      container.innerHTML = '';
+      let total = 0;
+      quizQuestions.forEach((q, idx) => {
+        total += q.points;
+        const qDiv = document.createElement('div');
+        qDiv.className = 'p-5 rounded-xl border border-slate-200 bg-slate-50/40 hover:bg-slate-50 transition-all space-y-3';
+        let typeBadge = '<span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">Multiple Choice</span>';
+        if (q.type === 'fill') typeBadge = '<span class="px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800">Fill-in-the-Blank</span>';
+        if (q.type === 'short') typeBadge = '<span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-100 text-purple-800">Short Answer</span>';
+        let innerContent = '';
+        if (q.type === 'mcq') {
+          innerContent = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">${q.options.map((opt, oIdx) => `<div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-center gap-2"><span class="w-4 h-4 rounded-full border-2 border-slate-400 shrink-0"></span><span>${opt}</span></div>`).join('')}</div>`;
+        } else if (q.type === 'fill') {
+          innerContent = `<div class="pt-2"><div class="p-3 bg-white rounded-lg border border-dashed border-slate-300 text-xs text-slate-400 font-mono">Write answer here: __________________________________________________</div></div>`;
+        } else {
+          innerContent = `<div class="pt-2"><div class="h-16 bg-white rounded-lg border border-slate-200 p-2 text-xs text-slate-300">[Student lines for written response]</div></div>`;
+        }
+        const answerKeyBox = showQuizAnswers ? `<div class="p-3 rounded-lg bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 space-y-1 mt-2"><div class="font-bold">✓ Answer: ${q.answer}</div><div class="text-emerald-800 text-xs"><em>Rationale:</em> ${q.rationale}</div></div>` : '';
+        qDiv.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center gap-2"><span class="font-extrabold text-slate-900 text-sm">Q${idx+1}.</span>${typeBadge}</div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-400 font-mono">(${q.points} pts)</span>
+              <button onclick="deleteQuizQuestion(${idx})" class="text-slate-400 hover:text-rose-600 p-1 no-print" title="Delete"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+          <div class="text-xs sm:text-sm font-semibold text-slate-900 leading-relaxed">${q.question}</div>
+          ${innerContent}${answerKeyBox}`;
+        container.appendChild(qDiv);
+      });
+      const pts = document.getElementById('qz-total-pts');
+      if (pts) pts.innerText = total;
+      refreshIcons();
+    }
+
+    function toggleQuizAnswerKey() {
+      showQuizAnswers = !showQuizAnswers;
+      const txt = document.getElementById('key-btn-text');
+      if (txt) txt.innerText = showQuizAnswers ? 'Hide Answer Key' : 'Show Answer Key';
+      renderQuiz();
+    }
+
+    function deleteQuizQuestion(idx) {
+      quizQuestions.splice(idx, 1);
+      renderQuiz();
+    }
+
+    function addNewQuizQuestion() {
+      quizQuestions.push({ id:'q-'+Date.now(), type:'mcq', question:'Click to type your question here...', options:['A) First option','B) Second option','C) Third option','D) Fourth option'], answer:'A) First option', rationale:'Teacher explanation here', points:4 });
+      renderQuiz();
+    }
+
+    function generateQuizFromText() {
+      const title = document.getElementById('qz-title-input').value;
+      const text = document.getElementById('qz-source-text').value;
+      const type = document.getElementById('qz-type-select').value;
+      const count = parseInt(document.getElementById('qz-count-select').value);
+      const disp = document.getElementById('qz-title-display');
+      if (disp) disp.innerText = title;
+      const words = text.split(/\s+/).filter(w => w.length > 5).map(w => w.replace(/[^a-zA-Z]/g,''));
+      const vocab = Array.from(new Set(words)).slice(0, 10);
+      const generated = [];
+      for (let i = 0; i < count; i++) {
+        const v = vocab[i % vocab.length] || 'concept';
+        const V = v.charAt(0).toUpperCase() + v.slice(1);
+        if (type === 'mcq' || (type === 'mixed' && i % 3 === 0)) {
+          generated.push({ id:'q-'+i, type:'mcq', question:`According to the reading, what is the primary role of "${V}" in this system?`, options:[`A) It is the key producer or agent described in the passage`,`B) It prevents energy transfer in the system`,`C) It has no measurable function in this context`,`D) It serves only as an inert byproduct`], answer:`A) It is the key producer or agent described in the passage`, rationale:`The passage highlights ${V} as central to the core process described.`, points:4 });
+        } else if (type === 'fill' || (type === 'mixed' && i % 3 === 1)) {
+          generated.push({ id:'q-'+i, type:'fill', question:`In this lesson, the term ______________ specifically describes the function associated with ${V}.`, answer:V, rationale:'Direct vocabulary identification from the reading passage.', points:4 });
+        } else {
+          generated.push({ id:'q-'+i, type:'short', question:`In 2–3 complete sentences, explain how "${V}" contributes to the overall system described in the text.`, answer:`Students should connect ${V} to the other elements in the passage with logical reasoning and evidence.`, rationale:'Look for accurate conceptual definitions and logical connections.', points:4 });
+        }
+      }
+      quizQuestions = generated;
+      renderQuiz();
+      alert('Quiz created! Every question is fully editable. Click "Show Answer Key" to see answers.');
+    }
+
+    function exportQuizWord() {
+      const titleEl = document.getElementById('qz-title-display');
+      const title = titleEl ? titleEl.innerText : 'Quiz';
+      const canvas = document.getElementById('quiz-canvas');
+      const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>${title}</title><style>body{font-family:Calibri,Arial;font-size:11pt;padding:20px;}h1{color:#6b21a8;}</style></head><body><h1>${title}</h1><p>Teacher Albejean I. Rosabe</p>${canvas ? canvas.innerHTML : ''}</body></html>`;
+      downloadFile(html, `${title.replace(/\s+/g,'_')}_Quiz.doc`, 'application/msword;charset=utf-8');
+    }
+
+    // ==========================================
+    // MODULE 7: VISUAL HELPERS & DIAGRAMS
+    // ==========================================
+    let currentDiagramType = 'cycle';
+    let currentDiagramColor = 'emerald';
+    let currentDiagramTitle = "The Water Cycle: Earth's Continuous Journey";
+
+    const colorPalettes = {
+      emerald: { main:'#059669', light:'#d1fae5', text:'#065f46', stroke:'#10b981' },
+      blue:    { main:'#2563eb', light:'#dbeafe', text:'#1e40af', stroke:'#3b82f6' },
+      purple:  { main:'#7c3aed', light:'#ede9fe', text:'#5b21b6', stroke:'#8b5cf6' },
+      amber:   { main:'#d97706', light:'#fef3c7', text:'#92400e', stroke:'#f59e0b' }
+    };
+
+    function selectDiagramType(type) {
+      currentDiagramType = type;
+      const titles = { cycle:"The Water Cycle: Earth's Continuous Journey", plot:"Narrative Plot Mountain: Story Arc Guide", venn:"Compare & Contrast: Venn Diagram Model", fractions:"Visual Fractions: Halves, Fourths & Eighths", anchor:"Teacher Albejean's Classroom Success Criteria" };
+      currentDiagramTitle = titles[type] || currentDiagramTitle;
+      const inp = document.getElementById('diag-title-input');
+      if (inp) inp.value = currentDiagramTitle;
+      renderDiagram();
+    }
+
+    function setDiagramColor(color) { currentDiagramColor = color; renderDiagram(); }
+    function updateDiagramTitle(val) { currentDiagramTitle = val; renderDiagram(); }
+
+    function renderDiagram() {
+      const container = document.getElementById('svg-render-container');
+      if (!container) return;
+      const pal = colorPalettes[currentDiagramColor] || colorPalettes.emerald;
+      const t = currentDiagramTitle;
+      let svg = '';
+
+      if (currentDiagramType === 'cycle') {
+        svg = `<svg viewBox="0 0 600 400" width="100%" height="380" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="#ffffff" rx="16"/>
+          <text x="300" y="36" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">${t}</text>
+          <text x="300" y="56" text-anchor="middle" font-size="10" fill="#64748b">Teacher Albejean I. Rosabe &#xb7; Science Visual Helper</text>
+          <circle cx="300" cy="215" r="55" fill="${pal.light}" stroke="${pal.main}" stroke-width="3"/>
+          <text x="300" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="${pal.text}">CONTINUOUS</text>
+          <text x="300" y="228" text-anchor="middle" font-size="12" font-weight="bold" fill="${pal.text}">CYCLE</text>
+          <g transform="translate(210,78)"><rect width="180" height="50" rx="10" fill="${pal.main}"/><text x="90" y="23" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1. Evaporation</text><text x="90" y="40" text-anchor="middle" font-size="10" fill="#e2e8f0">Liquid changes to vapor</text></g>
+          <g transform="translate(405,192)"><rect width="180" height="50" rx="10" fill="${pal.main}"/><text x="90" y="23" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">2. Condensation</text><text x="90" y="40" text-anchor="middle" font-size="10" fill="#e2e8f0">Vapor cools to form clouds</text></g>
+          <g transform="translate(210,292)"><rect width="180" height="50" rx="10" fill="${pal.main}"/><text x="90" y="23" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">3. Precipitation</text><text x="90" y="40" text-anchor="middle" font-size="10" fill="#e2e8f0">Rain, snow, or sleet falls</text></g>
+          <g transform="translate(15,192)"><rect width="180" height="50" rx="10" fill="${pal.main}"/><text x="90" y="23" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">4. Collection</text><text x="90" y="40" text-anchor="middle" font-size="10" fill="#e2e8f0">Water gathers in lakes &amp; seas</text></g>
+          <path d="M 384 130 Q 435 152 445 188" fill="none" stroke="${pal.stroke}" stroke-width="3" stroke-dasharray="6"/>
+          <path d="M 455 244 Q 432 282 398 297" fill="none" stroke="${pal.stroke}" stroke-width="3" stroke-dasharray="6"/>
+          <path d="M 207 310 Q 150 285 148 245" fill="none" stroke="${pal.stroke}" stroke-width="3" stroke-dasharray="6"/>
+          <path d="M 158 185 Q 178 148 212 130" fill="none" stroke="${pal.stroke}" stroke-width="3" stroke-dasharray="6"/>
+        </svg>`;
+      } else if (currentDiagramType === 'plot') {
+        svg = `<svg viewBox="0 0 620 380" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="#ffffff" rx="16"/>
+          <text x="310" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">${t}</text>
+          <text x="310" y="52" text-anchor="middle" font-size="10" fill="#64748b">Teacher Albejean I. Rosabe &#xb7; ELA Narrative Anchor Chart</text>
+          <polyline points="50,300 170,250 310,100 450,250 570,300" fill="none" stroke="${pal.main}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="310" cy="100" r="12" fill="#ef4444" stroke="#fff" stroke-width="3"/>
+          <rect x="228" y="64" width="164" height="36" rx="6" fill="#fee2e2" stroke="#ef4444"/>
+          <text x="310" y="87" text-anchor="middle" font-size="12" font-weight="bold" fill="#b91c1c">3. CLIMAX (Turning Point)</text>
+          <circle cx="170" cy="250" r="9" fill="${pal.stroke}"/>
+          <text x="162" y="225" text-anchor="end" font-size="12" font-weight="bold" fill="${pal.text}">2. Rising Action</text>
+          <text x="162" y="240" text-anchor="end" font-size="10" fill="#64748b">Conflict builds</text>
+          <circle cx="50" cy="300" r="9" fill="${pal.stroke}"/>
+          <text x="50" y="325" text-anchor="start" font-size="12" font-weight="bold" fill="#1e293b">1. Exposition / Hook</text>
+          <text x="50" y="340" text-anchor="start" font-size="10" fill="#64748b">Characters &amp; Setting</text>
+          <circle cx="450" cy="250" r="9" fill="${pal.stroke}"/>
+          <text x="460" y="225" text-anchor="start" font-size="12" font-weight="bold" fill="${pal.text}">4. Falling Action</text>
+          <text x="460" y="240" text-anchor="start" font-size="10" fill="#64748b">Tension eases</text>
+          <circle cx="570" cy="300" r="9" fill="${pal.stroke}"/>
+          <text x="570" y="325" text-anchor="end" font-size="12" font-weight="bold" fill="#1e293b">5. Resolution</text>
+          <text x="570" y="340" text-anchor="end" font-size="10" fill="#64748b">Story conclusion</text>
+        </svg>`;
+      } else if (currentDiagramType === 'venn') {
+        svg = `<svg viewBox="0 0 600 380" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="#ffffff" rx="16"/>
+          <text x="300" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">${t}</text>
+          <text x="300" y="52" text-anchor="middle" font-size="10" fill="#64748b">Teacher Albejean I. Rosabe &#xb7; Compare &amp; Contrast</text>
+          <circle cx="215" cy="215" r="135" fill="${pal.main}" fill-opacity="0.18" stroke="${pal.main}" stroke-width="3"/>
+          <circle cx="385" cy="215" r="135" fill="#3b82f6" fill-opacity="0.18" stroke="#3b82f6" stroke-width="3"/>
+          <text x="140" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="${pal.text}">Concept A Only</text>
+          <text x="140" y="200" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Unique trait 1</text>
+          <text x="140" y="220" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Unique trait 2</text>
+          <text x="140" y="240" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Specific example</text>
+          <text x="460" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e40af">Concept B Only</text>
+          <text x="460" y="200" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Distinct trait 1</text>
+          <text x="460" y="220" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Distinct trait 2</text>
+          <text x="460" y="240" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Contrasting feature</text>
+          <text x="300" y="185" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">BOTH / SHARED</text>
+          <text x="300" y="215" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Common property</text>
+          <text x="300" y="235" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Shared function</text>
+        </svg>`;
+      } else if (currentDiagramType === 'fractions') {
+        svg = `<svg viewBox="0 0 600 380" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="#ffffff" rx="16"/>
+          <text x="300" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">${t}</text>
+          <text x="300" y="52" text-anchor="middle" font-size="10" fill="#64748b">Teacher Albejean I. Rosabe &#xb7; Elementary Math Models</text>
+          <g transform="translate(50,78)"><rect width="140" height="40" fill="${pal.main}" rx="6"/><text x="70" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1 Whole (1/1)</text></g>
+          <text x="50" y="135" font-size="10" fill="#64748b">1 whole bar</text>
+          <g transform="translate(220,78)"><rect width="68" height="40" fill="${pal.stroke}" rx="6"/><rect x="72" width="68" height="40" fill="${pal.light}" stroke="${pal.stroke}" rx="6"/><text x="34" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1/2</text><text x="106" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="${pal.text}">1/2</text></g>
+          <text x="220" y="135" font-size="10" fill="#64748b">2 halves</text>
+          <g transform="translate(410,78)"><rect width="30" height="40" fill="${pal.main}" rx="4"/><rect x="34" width="30" height="40" fill="${pal.light}" stroke="${pal.stroke}" rx="4"/><rect x="68" width="30" height="40" fill="${pal.light}" stroke="${pal.stroke}" rx="4"/><rect x="102" width="30" height="40" fill="${pal.light}" stroke="${pal.stroke}" rx="4"/><text x="15" y="25" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">1/4</text><text x="49" y="25" text-anchor="middle" font-size="11" fill="${pal.text}">1/4</text><text x="83" y="25" text-anchor="middle" font-size="11" fill="${pal.text}">1/4</text><text x="117" y="25" text-anchor="middle" font-size="11" fill="${pal.text}">1/4</text></g>
+          <text x="410" y="135" font-size="10" fill="#64748b">4 fourths (quarters)</text>
+          <g transform="translate(120,240)"><circle r="60" fill="${pal.light}" stroke="${pal.main}" stroke-width="3"/><path d="M 0 0 L 0 -60 A 60 60 0 0 1 60 0 Z" fill="${pal.main}"/><text x="0" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">1/4 Shaded</text></g>
+          <g transform="translate(300,240)"><circle r="60" fill="${pal.light}" stroke="${pal.main}" stroke-width="3"/><path d="M 0 0 L 0 -60 A 60 60 0 0 1 0 60 Z" fill="${pal.main}"/><text x="0" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">1/2 Shaded</text></g>
+          <g transform="translate(480,240)"><circle r="60" fill="${pal.light}" stroke="${pal.main}" stroke-width="3"/><path d="M 0 0 L 0 -60 A 60 60 0 1 1 -60 0 Z" fill="${pal.main}"/><text x="0" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">3/4 Shaded</text></g>
+        </svg>`;
+      } else if (currentDiagramType === 'anchor') {
+        svg = `<svg viewBox="0 0 600 380" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="${pal.light}" rx="16"/>
+          <rect x="20" y="20" width="560" height="340" rx="14" fill="none" stroke="${pal.main}" stroke-width="4"/>
+          <rect x="40" y="30" width="520" height="70" rx="10" fill="${pal.main}"/>
+          <text x="300" y="64" text-anchor="middle" font-size="20" font-weight="bold" fill="#ffffff">${t}</text>
+          <text x="300" y="86" text-anchor="middle" font-size="11" fill="#e2e8f0">Teacher Albejean I. Rosabe &#xb7; Grade 5</text>
+          <text x="80" y="140" font-size="14" font-weight="bold" fill="${pal.text}">&#x2713; We will KNOW:</text>
+          <text x="80" y="165" font-size="12" fill="#334155">&#x2022; Key vocabulary and concepts from the lesson</text>
+          <text x="80" y="185" font-size="12" fill="#334155">&#x2022; How to apply the skill in context</text>
+          <text x="80" y="205" font-size="12" fill="#334155">&#x2022; Important facts and supporting details</text>
+          <text x="80" y="240" font-size="14" font-weight="bold" fill="${pal.text}">&#x2713; We will DO:</text>
+          <text x="80" y="265" font-size="12" fill="#334155">&#x2022; Read and analyze the learning material carefully</text>
+          <text x="80" y="285" font-size="12" fill="#334155">&#x2022; Collaborate, discuss, and share our thinking</text>
+          <text x="80" y="305" font-size="12" fill="#334155">&#x2022; Apply our learning through tasks and assessment</text>
+          <text x="300" y="348" text-anchor="middle" font-size="11" fill="${pal.text}" font-weight="bold">&#9733; I can do this! I am ready to learn! &#9733;</text>
+        </svg>`;
+      }
+
+      container.innerHTML = svg;
+    }
+
+    function downloadVisualSVG() {
+      const container = document.getElementById('svg-render-container');
+      if (!container) return;
+      const svgEl = container.querySelector('svg');
+      if (!svgEl) { alert('Please select a diagram template first.'); return; }
+      const svgData = new XMLSerializer().serializeToString(svgEl);
+      const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Rosabe_${currentDiagramType}_diagram.svg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('rosabe_backup_students');
       if (saved) {
-        try {
-          studentComments = JSON.parse(saved);
-        } catch(e) {}
+        try { studentComments = JSON.parse(saved); } catch(e) {}
       }
       renderStudents();
+      renderQuiz();
+      renderDiagram();
       refreshIcons();
     });
   </script>
