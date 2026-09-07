@@ -1444,7 +1444,11 @@ Requirements:
     // ==========================================
     function saveGeminiKey() {
       const key = document.getElementById('gemini-api-key').value.trim();
-      if (!key.startsWith('AIza')) { alert('Please paste a valid Gemini API key (starts with AIza...). Get one free at aistudio.google.com'); return; }
+      if (key.includes('●') || key === '') { alert('Please paste your actual API key first.'); return; }
+      if (!key.startsWith('AIza')) {
+        alert('❌ Wrong key format!\n\nYour key starts with "' + key.substring(0,6) + '..." — that is NOT a Gemini API key.\n\nGemini API keys always start with "AIza..."\n\nGet the correct key:\n1. Go to aistudio.google.com/app/apikey\n2. Click "Create API key"\n3. Copy the key (starts with AIza...)\n4. Paste it here');
+        return;
+      }
       localStorage.setItem('rosabe_gemini_key', key);
       updateAIKeyStatus();
       alert('✅ Gemini API key saved! Now type a topic and click "Generate with AI".');
