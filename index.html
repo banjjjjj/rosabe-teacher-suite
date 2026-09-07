@@ -307,8 +307,11 @@
           <button onclick="exportCommentsCSV()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
             <i data-lucide="download" class="w-3.5 h-3.5 text-slate-600"></i> Export All as CSV
           </button>
+          <button onclick="bulkGenerateWithAI()" class="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold text-xs rounded-lg flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i> AI Batch Generate
+          </button>
           <button onclick="bulkGeneratePending()" class="px-3.5 py-2 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 text-emerald-800 font-semibold text-xs rounded-lg flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-700"></i> Batch Generate Pending
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-emerald-700"></i> Template Batch
           </button>
           <button onclick="addNewStudentRow()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Student Row
@@ -354,9 +357,12 @@
             <label class="text-xs font-medium text-slate-600 block mb-1">Grade Level</label>
             <input type="text" id="lp-grade" value="Grade 5" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
           </div>
-          <div class="flex items-end">
-            <button onclick="generateLessonPlan()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 shadow-xs">
-              <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i> Generate 45-Min Plan
+          <div class="flex items-end gap-2">
+            <button onclick="generateLessonPlanWithAI()" class="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 shadow-xs">
+              <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i> Generate with AI
+            </button>
+            <button onclick="generateLessonPlan()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg flex items-center gap-1 shadow-xs" title="Template Mode">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i>
             </button>
           </div>
         </div>
@@ -571,9 +577,14 @@
               <label class="text-xs font-medium text-slate-600 block mb-1">Specific Observations</label>
               <textarea id="comm-notes" rows="3" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">Curiosity in science; needs reminder to record homework in agenda.</textarea>
             </div>
-            <button onclick="generateCommunication()" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 shadow-xs">
-              <i data-lucide="sparkles" class="w-4 h-4 text-amber-200"></i> Compose Email
-            </button>
+            <div class="flex gap-2">
+              <button onclick="generateCommunicationWithAI()" class="flex-1 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 shadow-xs">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-200"></i> Compose with AI
+              </button>
+              <button onclick="generateCommunication()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg flex items-center gap-1 shadow-xs" title="Template Mode">
+                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1073,6 +1084,200 @@ Grade 5 Educator</textarea>
       const subj = document.getElementById('comm-subject').value;
       const body = document.getElementById('comm-body').value;
       copyText(`Subject: ${subj}\n\n${body}`);
+    }
+
+
+    // ==========================================
+    // SHARED AI HELPER
+    // ==========================================
+    async function callGeminiAI(prompt, loadingEl, loadingText) {
+      const apiKey = localStorage.getItem('rosabe_gemini_key');
+      if (!apiKey) {
+        alert('No Gemini API key saved!\n\nGo to the "Quiz & Test Maker" tab → paste your free key in the purple bar → Save Key.\n\nGet a free key at: aistudio.google.com');
+        return null;
+      }
+      if (loadingEl) { loadingEl._orig = loadingEl.innerHTML; loadingEl.innerHTML = '<svg class="animate-spin w-4 h-4 inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg> ' + (loadingText || 'Generating with AI...'); loadingEl.disabled = true; }
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 2048 } })
+        });
+        if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'API error ' + res.status); }
+        const data = await res.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      } catch(err) {
+        alert('❌ AI Error: ' + err.message + '\n\nCheck your API key in the Quiz & Test Maker tab.');
+        return null;
+      } finally {
+        if (loadingEl) { loadingEl.innerHTML = loadingEl._orig; loadingEl.disabled = false; refreshIcons(); }
+      }
+    }
+
+    // ==========================================
+    // AI: REPORT CARDS — BULK GENERATE
+    // ==========================================
+    async function bulkGenerateWithAI() {
+      if (!studentComments || studentComments.length === 0) { alert('No students added yet. Add student rows first!'); return; }
+      const pending = studentComments.filter(s => !s.comment || s.comment.trim() === '' || s.comment.includes('Loading'));
+      if (pending.length === 0) { alert('All students already have comments! Clear some first or add new rows.'); return; }
+      const apiKey = localStorage.getItem('rosabe_gemini_key');
+      if (!apiKey) { alert('No Gemini API key!\n\nGo to Quiz & Test Maker tab → paste your free key in the purple bar.\n\nGet free key at: aistudio.google.com'); return; }
+      if (!confirm(`Generate AI comments for ${pending.length} student(s) with missing comments?\n\nThis uses your Gemini API key.`)) return;
+
+      for (const s of pending) {
+        const prompt = `You are a Grade 5 teacher named Teacher Albejean I. Rosabe writing a report card comment for a student.
+
+Student: ${s.name || 'the student'}
+Strengths: ${s.strengths || 'participates in class, shows effort'}
+Areas for Improvement: ${s.needs || 'needs to review homework regularly'}
+
+Write a warm, professional 3-paragraph report card comment (about 80-100 words total):
+- Paragraph 1: Start with a positive strength observation
+- Paragraph 2: Note one area to improve with encouragement
+- Paragraph 3: End with encouragement and a partnership message to parents
+
+Use "he/she" based on common Filipino names if unclear. Use the student's first name. Be warm and specific.
+Return ONLY the comment text, no labels, no JSON.`;
+
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 300 } })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+          if (text) { s.comment = text; s.wordCount = text.split(/\s+/).length; }
+        }
+      }
+      localStorage.setItem('rosabe_backup_students', JSON.stringify(studentComments));
+      renderStudents();
+      alert(`✅ AI generated comments for ${pending.length} student(s)!\n\nClick any comment to edit it.`);
+    }
+
+    // ==========================================
+    // AI: LESSON PLAN GENERATOR
+    // ==========================================
+    async function generateLessonPlanWithAI() {
+      const subject = document.getElementById('lp-subject').value || 'Science';
+      const topic = document.getElementById('lp-topic').value || 'Water Cycle';
+      const grade = document.getElementById('lp-grade').value || 'Grade 5';
+
+      const prompt = `You are ${grade} teacher Teacher Albejean I. Rosabe creating a detailed 45-minute lesson plan aligned to the Philippine DepEd K-12 curriculum.
+
+Subject: ${subject}
+Topic: ${topic}
+Grade: ${grade}
+
+Create a structured 45-minute lesson plan. Return ONLY valid JSON (no markdown):
+{
+  "title": "engaging lesson title",
+  "objectives": ["objective 1", "objective 2", "objective 3"],
+  "materials": ["material 1", "material 2", "material 3"],
+  "phases": [
+    { "name": "Motivation / Hook", "duration": "5 mins", "teacher": "what teacher does", "student": "what students do" },
+    { "name": "Lesson Proper", "duration": "15 mins", "teacher": "what teacher does", "student": "what students do" },
+    { "name": "Guided Practice", "duration": "15 mins", "teacher": "what teacher does", "student": "what students do" },
+    { "name": "Assessment / Closure", "duration": "10 mins", "teacher": "what teacher does", "student": "what students do" }
+  ],
+  "assignment": "brief homework or follow-up activity"
+}`;
+
+      const btn = document.querySelector('button[onclick="generateLessonPlanWithAI()"]');
+      const result = await callGeminiAI(prompt, btn, 'AI generating lesson plan...');
+      if (!result) return;
+
+      try {
+        const clean = result.replace(/```json/g,'').replace(/```/g,'').trim();
+        const plan = JSON.parse(clean);
+
+        const titleEl = document.getElementById('lp-title-display');
+        const subjEl = document.getElementById('lp-subject-display');
+        const gradeEl = document.getElementById('lp-grade-display');
+        if (titleEl) titleEl.innerText = plan.title || topic;
+        if (subjEl) subjEl.innerText = subject;
+        if (gradeEl) gradeEl.innerText = grade;
+
+        // Fill objectives
+        const objEl = document.getElementById('lp-objectives');
+        if (objEl && plan.objectives) objEl.innerHTML = plan.objectives.map(o => `<li>${o}</li>`).join('');
+
+        // Fill materials
+        const matEl = document.getElementById('lp-materials');
+        if (matEl && plan.materials) matEl.innerHTML = plan.materials.map(m => `<li>${m}</li>`).join('');
+
+        // Fill timetable phases
+        if (plan.phases) {
+          plan.phases.forEach((phase, i) => {
+            const nameEl = document.getElementById(`phase-name-${i}`);
+            const durEl = document.getElementById(`phase-dur-${i}`);
+            const teachEl = document.getElementById(`phase-teacher-${i}`);
+            const studEl = document.getElementById(`phase-student-${i}`);
+            if (nameEl) nameEl.innerText = phase.name;
+            if (durEl) durEl.innerText = phase.duration;
+            if (teachEl) teachEl.innerText = phase.teacher;
+            if (studEl) studEl.innerText = phase.student;
+          });
+        }
+
+        // Fill assignment
+        const assignEl = document.getElementById('lp-assignment');
+        if (assignEl && plan.assignment) assignEl.innerText = plan.assignment;
+
+        alert(`✅ AI generated a complete 45-min lesson plan for "${topic}"!\n\nClick any cell to edit it.`);
+      } catch(e) {
+        // If JSON parse fails, just put raw text into title area
+        const titleEl = document.getElementById('lp-title-display');
+        if (titleEl) titleEl.innerText = topic + ' — 45-Min Lesson Plan';
+        alert('AI generated the plan but could not auto-fill all fields. Copy the content manually:\n\n' + result.substring(0, 500));
+      }
+    }
+
+    // ==========================================
+    // AI: PARENT COMMUNICATION GENERATOR
+    // ==========================================
+    async function generateCommunicationWithAI() {
+      const student = document.getElementById('comm-student').value || 'the student';
+      const parent = document.getElementById('comm-parent').value || 'the parent';
+      const msgType = document.getElementById('comm-type') ? document.getElementById('comm-type').value : 'progress';
+      const notes = document.getElementById('comm-notes').value || 'shows curiosity and effort in class';
+
+      const prompt = `You are Grade 5 teacher Teacher Albejean I. Rosabe writing a parent communication email.
+
+Student: ${student}
+Parent: ${parent}
+Observations / Context: ${notes}
+
+Write a warm, professional parent email. Return ONLY valid JSON (no markdown):
+{
+  "subject": "engaging email subject line",
+  "body": "full email body with proper paragraphs, greeting, and sign-off. Sign as Teacher Albejean I. Rosabe."
+}
+
+Requirements:
+- Warm and positive tone
+- 3-4 paragraphs
+- Start with a genuine positive observation
+- Include specific actionable advice for parents
+- End with invitation to communicate further
+- Use the student's first name throughout`;
+
+      const btn = document.querySelector('button[onclick="generateCommunicationWithAI()"]');
+      const result = await callGeminiAI(prompt, btn, 'AI composing email...');
+      if (!result) return;
+
+      try {
+        const clean = result.replace(/```json/g,'').replace(/```/g,'').trim();
+        const comm = JSON.parse(clean);
+        const subjEl = document.getElementById('comm-subject');
+        const bodyEl = document.getElementById('comm-body');
+        if (subjEl && comm.subject) subjEl.value = comm.subject;
+        if (bodyEl && comm.body) bodyEl.value = comm.body;
+        alert(`✅ AI composed a parent email for ${student}!\n\nReview and edit it, then click "Copy to Clipboard".`);
+      } catch(e) {
+        const bodyEl = document.getElementById('comm-body');
+        if (bodyEl) bodyEl.value = result;
+        alert(`✅ AI composed the email! Review and edit as needed.`);
+      }
     }
 
     function exportBackupJSON() {
