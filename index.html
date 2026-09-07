@@ -1094,16 +1094,21 @@ Grade 5 Educator</textarea>
       const apiKey = localStorage.getItem('rosabe_gemini_key');
       if (!apiKey) return { success: false, error: 'NO_KEY' };
 
+      // Ensure obsolete models are purged from cache
+      let cached = localStorage.getItem('rosabe_working_gemini_model');
+      if (cached === 'gemini-pro' || cached === 'models/gemini-pro') {
+        localStorage.removeItem('rosabe_working_gemini_model');
+        cached = null;
+      }
+
       const candidateModels = [
         'gemini-flash-latest',
         'gemini-2.0-flash',
-        'gemini-2.5-flash',
-        'gemini-1.5-flash-latest',
         'gemini-1.5-flash',
-        'gemini-pro'
+        'gemini-1.5-flash-latest',
+        'gemini-1.5-pro'
       ];
       
-      const cached = localStorage.getItem('rosabe_working_gemini_model');
       if (cached && candidateModels.includes(cached)) {
         candidateModels.splice(candidateModels.indexOf(cached), 1);
         candidateModels.unshift(cached);
@@ -1112,39 +1117,41 @@ Grade 5 Educator</textarea>
       let lastError = null;
 
       for (const model of candidateModels) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
-        try {
-          const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-goog-api-key': apiKey
-            },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { temperature: 0.7, maxOutputTokens: maxTokens }
-            })
-          });
+        // Try header auth first (preferred for AQ. keys), then query param auth (for AIza keys)
+        const attempts = [
+          { url: `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey } },
+          { url: `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, headers: { 'Content-Type': 'application/json' } }
+        ];
 
-          if (res.ok) {
-            const data = await res.json();
-            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-            localStorage.setItem('rosabe_working_gemini_model', model);
-            return { success: true, text: text };
+        for (const attempt of attempts) {
+          try {
+            const res = await fetch(attempt.url, {
+              method: 'POST',
+              headers: attempt.headers,
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.7, maxOutputTokens: maxTokens }
+              })
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+              localStorage.setItem('rosabe_working_gemini_model', model);
+              return { success: true, text: text };
+            }
+
+            const errJson = await res.json().catch(() => ({}));
+            const errMsg = errJson.error?.message || `HTTP ${res.status}`;
+            lastError = errMsg;
+
+            // If 404 or unsupported model, skip to next model
+            if (res.status === 404 || errMsg.toLowerCase().includes('not found') || errMsg.toLowerCase().includes('not supported')) {
+              break; // break inner loop to try next model
+            }
+          } catch(netErr) {
+            lastError = netErr.message;
           }
-
-          const errJson = await res.json().catch(() => ({}));
-          const errMsg = errJson.error?.message || `HTTP ${res.status}`;
-          lastError = errMsg;
-
-          // If not found or model error, try next candidate
-          if (res.status === 404 || errMsg.toLowerCase().includes('not found') || errMsg.toLowerCase().includes('not supported') || res.status === 503) {
-            continue;
-          } else {
-            return { success: false, error: errMsg };
-          }
-        } catch(netErr) {
-          lastError = netErr.message;
         }
       }
       return { success: false, error: lastError || 'Unable to reach Gemini API models.' };
