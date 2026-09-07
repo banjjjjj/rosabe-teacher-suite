@@ -1445,13 +1445,13 @@ Requirements:
     function saveGeminiKey() {
       const key = document.getElementById('gemini-api-key').value.trim();
       if (key.includes('●') || key === '') { alert('Please paste your actual API key first.'); return; }
-      if (!key.startsWith('AIza')) {
-        alert('❌ Wrong key format!\n\nYour key starts with "' + key.substring(0,6) + '..." — that is NOT a Gemini API key.\n\nGemini API keys always start with "AIza..."\n\nGet the correct key:\n1. Go to aistudio.google.com/app/apikey\n2. Click "Create API key"\n3. Copy the key (starts with AIza...)\n4. Paste it here');
+      if (key.length < 15) {
+        alert('Please paste a valid API key from Google AI Studio.');
         return;
       }
       localStorage.setItem('rosabe_gemini_key', key);
       updateAIKeyStatus();
-      alert('✅ Gemini API key saved! Now type a topic and click "Generate with AI".');
+      alert('✅ Gemini API key saved! Now you can generate content with AI across all modules.');
     }
 
     function clearGeminiKey() {
