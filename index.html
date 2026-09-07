@@ -1088,18 +1088,18 @@ Grade 5 Educator</textarea>
 
 
     // ==========================================
-    // SHARED ROBUST GEMINI AI ENGINE (Multi-Model Fallback)
+    // SHARED ROBUST GEMINI AI ENGINE
     // ==========================================
     async function requestGeminiApi(prompt, maxTokens = 2048) {
       const apiKey = localStorage.getItem('rosabe_gemini_key');
       if (!apiKey) return { success: false, error: 'NO_KEY' };
 
       const candidateModels = [
+        'gemini-flash-latest',
         'gemini-2.0-flash',
-        'gemini-1.5-flash',
-        'gemini-1.5-flash-latest',
         'gemini-2.5-flash',
-        'gemini-1.5-pro',
+        'gemini-1.5-flash-latest',
+        'gemini-1.5-flash',
         'gemini-pro'
       ];
       
@@ -1112,38 +1112,39 @@ Grade 5 Educator</textarea>
       let lastError = null;
 
       for (const model of candidateModels) {
-        for (const apiVer of ['v1beta', 'v1']) {
-          const url = `https://generativelanguage.googleapis.com/${apiVer}/models/${model}:generateContent?key=${apiKey}`;
-          try {
-            const res = await fetch(url, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.7, maxOutputTokens: maxTokens }
-              })
-            });
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-goog-api-key': apiKey
+            },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { temperature: 0.7, maxOutputTokens: maxTokens }
+            })
+          });
 
-            if (res.ok) {
-              const data = await res.json();
-              const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-              localStorage.setItem('rosabe_working_gemini_model', model);
-              return { success: true, text: text };
-            }
-
-            const errJson = await res.json().catch(() => ({}));
-            const errMsg = errJson.error?.message || `HTTP ${res.status}`;
-            lastError = errMsg;
-
-            // If not found or not supported, try next model
-            if (res.status === 404 || errMsg.toLowerCase().includes('not found') || errMsg.toLowerCase().includes('not supported')) {
-              continue;
-            } else {
-              return { success: false, error: errMsg };
-            }
-          } catch(netErr) {
-            lastError = netErr.message;
+          if (res.ok) {
+            const data = await res.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            localStorage.setItem('rosabe_working_gemini_model', model);
+            return { success: true, text: text };
           }
+
+          const errJson = await res.json().catch(() => ({}));
+          const errMsg = errJson.error?.message || `HTTP ${res.status}`;
+          lastError = errMsg;
+
+          // If not found or model error, try next candidate
+          if (res.status === 404 || errMsg.toLowerCase().includes('not found') || errMsg.toLowerCase().includes('not supported') || res.status === 503) {
+            continue;
+          } else {
+            return { success: false, error: errMsg };
+          }
+        } catch(netErr) {
+          lastError = netErr.message;
         }
       }
       return { success: false, error: lastError || 'Unable to reach Gemini API models.' };
