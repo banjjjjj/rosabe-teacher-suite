@@ -634,14 +634,38 @@ Grade 5 Educator</textarea>
         </div>
       </div>
 
+      <!-- AI API Key Setup -->
+      <div id="ai-setup-bar" class="bg-gradient-to-r from-purple-900 to-indigo-900 text-white p-4 rounded-2xl border border-purple-700 no-print space-y-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
+          <span class="text-xs font-bold uppercase tracking-wider text-purple-200">🤖 Gemini AI — Real Question Generator (Free)</span>
+          <span class="ml-auto text-xs text-purple-300">Get free key: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="underline text-amber-300 font-bold">aistudio.google.com</a></span>
+        </div>
+        <div class="flex gap-2">
+          <input type="password" id="gemini-api-key" placeholder="Paste your free Gemini API key here (AIza...)" class="flex-1 text-xs p-2.5 rounded-lg border border-purple-500 bg-purple-800/60 text-white placeholder-purple-300 focus:outline-none focus:border-amber-400">
+          <button onclick="saveGeminiKey()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-xs rounded-lg whitespace-nowrap">Save Key</button>
+          <button onclick="clearGeminiKey()" class="px-3 py-2 bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs rounded-lg">Clear</button>
+        </div>
+        <div id="ai-key-status" class="text-xs text-purple-300">No key saved — using template mode. With a key, AI generates real Grade 5 questions on any topic.</div>
+      </div>
+
       <!-- Generator Input Box -->
       <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs no-print space-y-4">
-        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Generate From Text Snippet or Transcript</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Generate Quiz</h3>
+          <span id="ai-mode-badge" class="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500">Template Mode</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="text-xs font-medium text-slate-600 block mb-1">Assessment Title</label>
-            <input type="text" id="qz-title-input" value="Grade 5 Science: Photosynthesis &amp; Ecosystem Energy Flow" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+            <input type="text" id="qz-title-input" value="Grade 5 Science: Photosynthesis" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
           </div>
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Topic / Subject (AI uses this)</label>
+            <input type="text" id="qz-topic-input" placeholder="e.g. Water Cycle, Battle of Mactan, Fractions..." class="w-full text-xs p-2.5 rounded-lg border border-purple-300 focus:border-purple-500 bg-purple-50">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="text-xs font-medium text-slate-600 block mb-1">Question Type Mix</label>
             <select id="qz-type-select" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 bg-white">
@@ -661,12 +685,17 @@ Grade 5 Educator</textarea>
           </div>
         </div>
         <div>
-          <label class="text-xs font-medium text-slate-600 block mb-1">Paste Lesson Text, Chapter Snippet, or Video Transcript</label>
-          <textarea id="qz-source-text" rows="4" class="w-full text-xs p-3 rounded-xl border border-slate-300 focus:border-purple-500 font-sans" placeholder="Paste your reading excerpt or transcript here...">Plants are primary producers that make their own food through photosynthesis using sunlight, carbon dioxide from the air, and water from the soil. In plant cells, chloroplasts contain chlorophyll, the green pigment that absorbs light energy. Photosynthesis produces glucose, which feeds the plant, and releases oxygen into the atmosphere. Herbivores consume plants for energy, and carnivores consume other animals. Decomposers, such as fungi and bacteria, break down dead organisms and return nutrients to the soil.</textarea>
+          <label class="text-xs font-medium text-slate-600 block mb-1">Optional: Paste Text / Transcript (or leave blank to use AI on topic alone)</label>
+          <textarea id="qz-source-text" rows="3" class="w-full text-xs p-3 rounded-xl border border-slate-300 focus:border-purple-500 font-sans" placeholder="Paste lesson text here, OR just type a topic above and click Generate with AI..."></textarea>
         </div>
-        <button onclick="generateQuizFromText()" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm">
-          <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i> Synthesize Quiz &amp; Answer Key
-        </button>
+        <div class="flex gap-2">
+          <button onclick="generateQuizWithAI()" id="btn-ai-generate" class="flex-1 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm">
+            <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i> <span id="ai-btn-label">Generate with AI (Gemini)</span>
+          </button>
+          <button onclick="generateQuizFromText()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-3.5 h-3.5"></i> Template Mode
+          </button>
+        </div>
       </div>
 
       <!-- Printable Quiz Canvas -->
@@ -1143,14 +1172,6 @@ Grade 5 Educator</textarea>
     // MODULE 6: QUIZ & TEST BUILDER
     // ==========================================
     let showQuizAnswers = false;
-    let quizQuestions = [
-      { id:'q-1', type:'mcq', question:'Which organelle inside plant cells contains chlorophyll and carries out photosynthesis?', options:['A) Mitochondria','B) Chloroplast','C) Nucleus','D) Cell Wall'], answer:'B) Chloroplast', rationale:'Chloroplasts contain chlorophyll, the green pigment that absorbs sunlight for photosynthesis.', points:4 },
-      { id:'q-2', type:'mcq', question:'What essential gas do plants release into the atmosphere as a byproduct of photosynthesis?', options:['A) Carbon Dioxide','B) Nitrogen','C) Oxygen','D) Hydrogen'], answer:'C) Oxygen', rationale:'During photosynthesis, plants take in carbon dioxide and release oxygen.', points:4 },
-      { id:'q-3', type:'fill', question:'Organisms that break down dead plants and animals and return nutrients to the soil are called ______________.', answer:'Decomposers (fungi and bacteria)', rationale:'Decomposers recycle matter back into the ecosystem.', points:4 },
-      { id:'q-4', type:'fill', question:'Plants convert sunlight, water, and carbon dioxide into a sugar called ______________ for food.', answer:'Glucose', rationale:'Glucose is the simple sugar used by plants for cellular energy.', points:4 },
-      { id:'q-5', type:'short', question:'Explain why herbivores and carnivores depend on photosynthesis, even though they cannot perform it themselves.', answer:'Herbivores eat plants directly to gain energy originating from photosynthesis. Carnivores eat herbivores that depend on plants. Without photosynthesis, the foundational energy of the entire food web would collapse.', rationale:'Expect students to explain the transfer of energy through trophic levels.', points:4 }
-    ];
-
     function renderQuiz() {
       const container = document.getElementById('quiz-questions-list');
       if (!container) return;
@@ -1165,13 +1186,13 @@ Grade 5 Educator</textarea>
         if (q.type === 'short') typeBadge = '<span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-100 text-purple-800">Short Answer</span>';
         let innerContent = '';
         if (q.type === 'mcq') {
-          innerContent = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">${q.options.map((opt, oIdx) => `<div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-center gap-2"><span class="w-4 h-4 rounded-full border-2 border-slate-400 shrink-0"></span><span>${opt}</span></div>`).join('')}</div>`;
+          innerContent = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">${q.options.map((opt, oIdx) => `<div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-center gap-2"><span class="w-4 h-4 rounded-full border-2 border-slate-400 shrink-0"></span><span contenteditable="true" oninput="quizQuestions[${idx}].options[${oIdx}]=this.innerText" class="editable-cell p-0.5 flex-1 focus:outline-none">${opt}</span></div>`).join('')}</div>`;
         } else if (q.type === 'fill') {
           innerContent = `<div class="pt-2"><div class="p-3 bg-white rounded-lg border border-dashed border-slate-300 text-xs text-slate-400 font-mono">Write answer here: __________________________________________________</div></div>`;
         } else {
           innerContent = `<div class="pt-2"><div class="h-16 bg-white rounded-lg border border-slate-200 p-2 text-xs text-slate-300">[Student lines for written response]</div></div>`;
         }
-        const answerKeyBox = showQuizAnswers ? `<div class="p-3 rounded-lg bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 space-y-1 mt-2"><div class="font-bold">✓ Answer: ${q.answer}</div><div class="text-emerald-800 text-xs"><em>Rationale:</em> ${q.rationale}</div></div>` : '';
+        const answerKeyBox = showQuizAnswers ? `<div class="p-3 rounded-lg bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 space-y-1 mt-2"><div class="font-bold flex items-center gap-1">✓ Answer: <span contenteditable="true" oninput="quizQuestions[${idx}].answer=this.innerText" class="editable-cell px-1 rounded bg-white/70">${q.answer}</span></div><div class="text-emerald-800"><em>Rationale:</em> <span contenteditable="true" oninput="quizQuestions[${idx}].rationale=this.innerText" class="editable-cell">${q.rationale}</span></div></div>` : '';
         qDiv.innerHTML = `
           <div class="flex items-start justify-between gap-3">
             <div class="flex items-center gap-2"><span class="font-extrabold text-slate-900 text-sm">Q${idx+1}.</span>${typeBadge}</div>
@@ -1180,7 +1201,7 @@ Grade 5 Educator</textarea>
               <button onclick="deleteQuizQuestion(${idx})" class="text-slate-400 hover:text-rose-600 p-1 no-print" title="Delete"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
             </div>
           </div>
-          <div class="text-xs sm:text-sm font-semibold text-slate-900 leading-relaxed">${q.question}</div>
+          <div contenteditable="true" oninput="quizQuestions[${idx}].question=this.innerText" class="editable-cell text-xs sm:text-sm font-semibold text-slate-900 leading-relaxed p-1 rounded-lg focus:outline-none">${q.question}</div>
           ${innerContent}${answerKeyBox}`;
         container.appendChild(qDiv);
       });
@@ -1202,34 +1223,163 @@ Grade 5 Educator</textarea>
     }
 
     function addNewQuizQuestion() {
-      quizQuestions.push({ id:'q-'+Date.now(), type:'mcq', question:'Click to type your question here...', options:['A) First option','B) Second option','C) Third option','D) Fourth option'], answer:'A) First option', rationale:'Teacher explanation here', points:4 });
+      quizQuestions.push({ id:'q-'+Date.now(), type:'mcq', question:'Click here to type your question...', options:['A) Option one','B) Option two','C) Option three','D) Option four'], answer:'A) Option one', rationale:'Teacher explanation here', points:4 });
       renderQuiz();
+    }
+
+    // ==========================================
+    // GEMINI AI KEY MANAGEMENT
+    // ==========================================
+    function saveGeminiKey() {
+      const key = document.getElementById('gemini-api-key').value.trim();
+      if (!key.startsWith('AIza')) { alert('Please paste a valid Gemini API key (starts with AIza...). Get one free at aistudio.google.com'); return; }
+      localStorage.setItem('rosabe_gemini_key', key);
+      updateAIKeyStatus();
+      alert('✅ Gemini API key saved! Now type a topic and click "Generate with AI".');
+    }
+
+    function clearGeminiKey() {
+      localStorage.removeItem('rosabe_gemini_key');
+      document.getElementById('gemini-api-key').value = '';
+      updateAIKeyStatus();
+    }
+
+    function updateAIKeyStatus() {
+      const key = localStorage.getItem('rosabe_gemini_key');
+      const statusEl = document.getElementById('ai-key-status');
+      const badgeEl = document.getElementById('ai-mode-badge');
+      const btnLabel = document.getElementById('ai-btn-label');
+      if (key) {
+        if (statusEl) statusEl.innerHTML = '✅ <strong class="text-amber-300">Gemini AI key active!</strong> Type any topic and click "Generate with AI" — no text needed.';
+        if (badgeEl) { badgeEl.textContent = '🤖 AI Mode Active'; badgeEl.className = 'px-2 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800'; }
+        if (btnLabel) btnLabel.textContent = 'Generate with Gemini AI ✨';
+        const keyInput = document.getElementById('gemini-api-key');
+        if (keyInput) keyInput.value = '●●●●●●●●●●●●●●●● (saved)';
+      } else {
+        if (statusEl) statusEl.textContent = 'No key saved — using template mode. With a key, AI generates real Grade 5 questions on any topic.';
+        if (badgeEl) { badgeEl.textContent = 'Template Mode'; badgeEl.className = 'px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500'; }
+        if (btnLabel) btnLabel.textContent = 'Generate with AI (Gemini)';
+      }
+    }
+
+    // ==========================================
+    // GEMINI AI QUIZ GENERATOR
+    // ==========================================
+    async function generateQuizWithAI() {
+      const apiKey = localStorage.getItem('rosabe_gemini_key');
+      if (!apiKey) {
+        const proceed = confirm('No Gemini API key saved.\n\nClick OK to use Template Mode instead, or Cancel to first save your free API key at the top of this page.\n\nGet a free key at: aistudio.google.com');
+        if (proceed) generateQuizFromText();
+        return;
+      }
+
+      const title = document.getElementById('qz-title-input').value || 'Grade 5 Assessment';
+      const topic = document.getElementById('qz-topic-input').value.trim();
+      const extraText = document.getElementById('qz-source-text').value.trim();
+      const type = document.getElementById('qz-type-select').value;
+      const count = parseInt(document.getElementById('qz-count-select').value);
+
+      if (!topic && !extraText) {
+        alert('Please type a topic (e.g. "Water Cycle") in the Topic field, or paste some text.');
+        return;
+      }
+
+      const typeDesc = { mixed:'a mix of Multiple-Choice, Fill-in-the-Blank, and Short-Answer', mcq:'Multiple-Choice only (4 options each: A B C D)', fill:'Fill-in-the-Blank only', short:'Short-Answer only (2-3 sentences expected)' }[type];
+
+      const prompt = `You are an expert Grade 5 teacher in the Philippines creating a ${count}-question assessment.
+Topic: "${topic || 'based on the text below'}"
+${extraText ? `Reference text:\n${extraText}\n` : ''}
+Question types: ${typeDesc}
+Grade level: Grade 5, age 10-11, align to DepEd K-12 curriculum
+
+Generate exactly ${count} questions. Return ONLY valid JSON array, no markdown, no explanation:
+[
+  {
+    "type": "mcq",
+    "question": "...",
+    "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
+    "answer": "A) correct option text",
+    "rationale": "brief teacher explanation",
+    "points": 4
+  }
+]
+For fill type omit options. For short type omit options.`;
+
+      const btn = document.getElementById('btn-ai-generate');
+      const origHTML = btn.innerHTML;
+      btn.innerHTML = '<svg class="animate-spin w-4 h-4 mr-1 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle><path class="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z"></path></svg> Generating with Gemini AI...';
+      btn.disabled = true;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
+          })
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.error?.message || 'API error ' + response.status);
+        }
+
+        const data = await response.json();
+        let raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        raw = raw.replace(/```json/g,'').replace(/```/g,'').trim();
+        const parsed = JSON.parse(raw);
+
+        quizQuestions = parsed.map((q, i) => ({
+          id: 'q-ai-' + i,
+          type: q.type || 'mcq',
+          question: q.question,
+          options: q.options || ['A) —','B) —','C) —','D) —'],
+          answer: q.answer || '',
+          rationale: q.rationale || '',
+          points: q.points || 4
+        }));
+
+        const disp = document.getElementById('qz-title-display');
+        if (disp) disp.innerText = title;
+        renderQuiz();
+        alert(`✅ Gemini AI created ${quizQuestions.length} real Grade 5 questions about "${topic || 'the topic'}"!\n\nClick any question text or option to edit it.\nClick "Show Answer Key" to see answers.`);
+
+      } catch (err) {
+        console.error(err);
+        alert('❌ AI Error: ' + err.message + '\n\nPossible fixes:\n• Check your API key is correct\n• Check your internet connection\n• Try "Template Mode" button instead');
+      } finally {
+        btn.innerHTML = origHTML;
+        btn.disabled = false;
+        refreshIcons();
+      }
     }
 
     function generateQuizFromText() {
       const title = document.getElementById('qz-title-input').value;
-      const text = document.getElementById('qz-source-text').value;
+      const topic = document.getElementById('qz-topic-input') ? document.getElementById('qz-topic-input').value : '';
+      const text = document.getElementById('qz-source-text').value || topic || 'concept';
       const type = document.getElementById('qz-type-select').value;
       const count = parseInt(document.getElementById('qz-count-select').value);
       const disp = document.getElementById('qz-title-display');
       if (disp) disp.innerText = title;
-      const words = text.split(/\s+/).filter(w => w.length > 5).map(w => w.replace(/[^a-zA-Z]/g,''));
+      const words = text.split(/\s+/).filter(w => w.length > 4).map(w => w.replace(/[^a-zA-Z]/g,''));
       const vocab = Array.from(new Set(words)).slice(0, 10);
       const generated = [];
       for (let i = 0; i < count; i++) {
         const v = vocab[i % vocab.length] || 'concept';
         const V = v.charAt(0).toUpperCase() + v.slice(1);
         if (type === 'mcq' || (type === 'mixed' && i % 3 === 0)) {
-          generated.push({ id:'q-'+i, type:'mcq', question:`According to the reading, what is the primary role of "${V}" in this system?`, options:[`A) It is the key producer or agent described in the passage`,`B) It prevents energy transfer in the system`,`C) It has no measurable function in this context`,`D) It serves only as an inert byproduct`], answer:`A) It is the key producer or agent described in the passage`, rationale:`The passage highlights ${V} as central to the core process described.`, points:4 });
+          generated.push({ id:'q-'+i, type:'mcq', question:`What is the role of ${V} in this topic?`, options:[`A) It is the key element described`,`B) It prevents the main process`,`C) It has no function here`,`D) It is an unrelated byproduct`], answer:`A) It is the key element described`, rationale:`${V} is central to the core concept.`, points:4 });
         } else if (type === 'fill' || (type === 'mixed' && i % 3 === 1)) {
-          generated.push({ id:'q-'+i, type:'fill', question:`In this lesson, the term ______________ specifically describes the function associated with ${V}.`, answer:V, rationale:'Direct vocabulary identification from the reading passage.', points:4 });
+          generated.push({ id:'q-'+i, type:'fill', question:`The term ______________ refers to ${V} in this lesson.`, answer:V, rationale:'Vocabulary identification.', points:4 });
         } else {
-          generated.push({ id:'q-'+i, type:'short', question:`In 2–3 complete sentences, explain how "${V}" contributes to the overall system described in the text.`, answer:`Students should connect ${V} to the other elements in the passage with logical reasoning and evidence.`, rationale:'Look for accurate conceptual definitions and logical connections.', points:4 });
+          generated.push({ id:'q-'+i, type:'short', question:`In 2–3 sentences, explain the importance of ${V}.`, answer:`${V} is important because it connects to the main ideas discussed.`, rationale:'Look for logical reasoning and evidence.', points:4 });
         }
       }
       quizQuestions = generated;
       renderQuiz();
-      alert('Quiz created! Every question is fully editable. Click "Show Answer Key" to see answers.');
+      alert('Template quiz created! Click any question or option text to edit it directly.\n\nTip: Use "Generate with AI" + a free Gemini key for real topic-based questions!');
     }
 
     function exportQuizWord() {
@@ -1238,12 +1388,6 @@ Grade 5 Educator</textarea>
       const canvas = document.getElementById('quiz-canvas');
       const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>${title}</title><style>body{font-family:Calibri,Arial;font-size:11pt;padding:20px;}h1{color:#6b21a8;}</style></head><body><h1>${title}</h1><p>Teacher Albejean I. Rosabe</p>${canvas ? canvas.innerHTML : ''}</body></html>`;
       downloadFile(html, `${title.replace(/\s+/g,'_')}_Quiz.doc`, 'application/msword;charset=utf-8');
-    }
-
-    // ==========================================
-    // MODULE 7: VISUAL HELPERS & DIAGRAMS
-    // ==========================================
-    let currentDiagramType = 'cycle';
     let currentDiagramColor = 'emerald';
     let currentDiagramTitle = "The Water Cycle: Earth's Continuous Journey";
 
@@ -1393,6 +1537,7 @@ Grade 5 Educator</textarea>
       renderStudents();
       renderQuiz();
       renderDiagram();
+      updateAIKeyStatus();
       refreshIcons();
     });
   </script>
