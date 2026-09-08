@@ -1,172 +1,1827 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PigFarm Pro — Management System</title>
-    
-    <!-- PWA iOS & Android Settings -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0a0e17">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="PigFarm Pro">
-    <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Albejean I. Rosabe's Dashboard — Rosabe AI Suite</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
-    <!-- QR Code Generator & Scanner CDNs for Zero-Cloud Offline P2P Sync -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .editable-cell {
+      border: 1px dashed transparent;
+      transition: all 0.2s;
+      cursor: text;
+    }
+    .editable-cell:hover {
+      border-color: #10b981;
+      background-color: #f0fdf4;
+    }
+    .editable-cell:focus {
+      outline: 2px solid #10b981;
+      background-color: #ffffff;
+      border-color: transparent;
+    }
+    @media print {
+      header, .no-print, .tab-nav, .action-bars { display: none !important; }
+      body { background: white; color: black; }
+    }
+  </style>
 </head>
-<body>
+<body class="min-h-screen text-slate-800 flex flex-col antialiased selection:bg-emerald-100 selection:text-emerald-900">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container"></div>
-
-    <!-- 1. LOGIN SCREEN -->
-    <div id="login-screen" class="login-wrapper">
-        <div class="login-card">
-            <div class="login-logo">🐷</div>
-            <h1 class="login-title">PigFarm Pro</h1>
-            <p class="login-subtitle">Role-Based Farm Management System</p>
-            
-            <div class="login-error-msg" id="login-error"></div>
-            
-            <div class="form-group">
-                <label class="form-label" style="text-align: left; display: block; margin-bottom: 6px;">Username</label>
-                <input type="text" id="login-username" class="form-control" placeholder="e.g. banjo" autocomplete="username">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" style="text-align: left; display: block; margin-bottom: 6px;">Password</label>
-                <input type="password" id="login-password" class="form-control" placeholder="Enter password" autocomplete="current-password">
-            </div>
-            
-            <button class="btn btn-primary" id="login-btn" style="width: 100%; margin-top: 12px;">Login Securely</button>
-            <div class="login-footer">
-                <p>Default Accounts:</p>
-                <p>Admin: banjo | Manager: albe</p>
-                <p>Default Password: <strong>password123</strong></p>
-            </div>
+  <!-- PERMANENT EDUCATOR HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm no-print">
+    <div class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 text-white px-4 py-2 sm:px-6">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/30 flex items-center justify-center border border-emerald-400/40">
+            <i data-lucide="graduation-cap" class="w-5 h-5 text-emerald-100"></i>
+          </div>
+          <div>
+            <span class="font-bold text-sm sm:text-base tracking-tight text-white flex items-center gap-2">
+              Teacher Albejean I. Rosabe's Dashboard
+              <span class="hidden md:inline-flex items-center gap-1 text-[11px] font-normal px-2 py-0.5 rounded-full bg-emerald-600/60 border border-emerald-400/30 text-emerald-100">
+                <i data-lucide="sparkles" class="w-3 h-3 text-amber-300"></i>
+                Zero-Server Web App
+              </span>
+            </span>
+          </div>
         </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="exportBackupJSON()" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-600/90 hover:bg-emerald-500 text-white border border-emerald-400/40 transition-all shadow-xs cursor-pointer" title="Download all student records and plans as JSON">
+            <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> Backup JSON
+          </button>
+          <label class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-900/60 hover:bg-emerald-800 text-white border border-emerald-400/40 transition-all cursor-pointer shadow-xs" title="Restore previous data from a JSON file">
+            <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> Restore JSON
+            <input type="file" id="restore-json-input" accept=".json" onchange="restoreBackupJSON(event)" class="hidden">
+          </label>
+        </div>
+        <div class="hidden sm:flex items-center gap-3">
+          <div class="flex items-center gap-1.5 text-xs text-emerald-100 bg-emerald-900/40 px-3 py-1 rounded-full border border-emerald-500/30">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>GitHub Pages & Offline Ready</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- 2. APP SHELL -->
-    <div id="app-shell" class="app-layout hidden">
-        
-        <!-- Mobile Top Navbar -->
-        <header class="mobile-navbar">
-            <button class="hamburger-btn" id="hamburger-btn" aria-label="Menu">☰</button>
-            <div class="mobile-logo">🐷 PigFarm Pro</div>
-        </header>
+    <!-- MODULE NAVIGATION TABS -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <nav class="flex items-center space-x-1 overflow-x-auto py-2.5 tab-nav scrollbar-none">
+        <button onclick="switchTab('overview')" id="nav-overview" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all bg-emerald-50 text-emerald-800 border border-emerald-200">
+          <i data-lucide="home" class="w-4 h-4 text-emerald-600"></i> Overview
+        </button>
+        <button onclick="switchTab('report-cards')" id="nav-report-cards" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i> Report Cards (Batch)
+        </button>
+        <button onclick="switchTab('lesson-plans')" id="nav-lesson-plans" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="calendar-check" class="w-4 h-4 text-slate-400"></i> 45-Min Lesson Plans
+        </button>
+        <button onclick="switchTab('rubrics')" id="nav-rubrics" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="table" class="w-4 h-4 text-slate-400"></i> Interactive Rubrics
+        </button>
+        <button onclick="switchTab('communication')" id="nav-communication" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i> Communication
+        </button>
+        <button onclick="switchTab('quiz-builder')" id="nav-quiz-builder" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="help-circle" class="w-4 h-4 text-slate-400"></i> Quiz &amp; Test Maker
+        </button>
+        <button onclick="switchTab('visual-helpers')" id="nav-visual-helpers" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="image" class="w-4 h-4 text-slate-400"></i> Visual Helpers &amp; Diagrams
+        </button>
+      </nav>
+    </div>
+  </header>
 
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-brand">
-                <span class="brand-logo">🐷</span>
-                <span class="brand-name">PigFarm Pro</span>
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+
+    <!-- ============================================================= -->
+    <!-- TAB 1: OVERVIEW -->
+    <!-- ============================================================= -->
+    <section id="tab-overview" class="tab-content active space-y-8">
+      <div class="bg-gradient-to-r from-emerald-800 to-teal-800 rounded-3xl p-6 sm:p-10 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-emerald-700/50">
+        <div class="space-y-3 max-w-2xl">
+          <div class="inline-flex items-center gap-2 text-emerald-200 text-xs font-semibold uppercase tracking-wider bg-emerald-900/50 px-3 py-1 rounded-full border border-emerald-500/30">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
+            Editable-First Suite &bull; Zero Server Needed
+          </div>
+          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight">
+            Welcome, Teacher Albejean I. Rosabe
+          </h1>
+          <p class="text-emerald-100 text-sm sm:text-base leading-relaxed">
+            Just like your farm management app, this web app runs <strong>directly in any browser with NO port, NO server, and NO installation required</strong>! Everything is editable live and ready to export to CSV, Word (.doc), and PDF.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button onclick="switchTab('report-cards')" class="px-4 py-2.5 rounded-xl bg-white text-slate-900 hover:bg-emerald-50 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2">
+              <i data-lucide="file-text" class="w-4 h-4 text-emerald-600"></i> Open Report Cards
+            </button>
+            <button onclick="switchTab('lesson-plans')" class="px-4 py-2.5 rounded-xl bg-emerald-900/60 hover:bg-emerald-900 text-white border border-emerald-400/40 font-bold text-xs sm:text-sm transition-all flex items-center gap-2">
+              <i data-lucide="calendar-check" class="w-4 h-4 text-amber-300"></i> Build 45-Min Lesson
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACKUP & RESTORE CARD -->
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 text-white border border-slate-700 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1 max-w-xl">
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400">
+            <i data-lucide="database" class="w-4 h-4"></i> Data Ownership & Privacy (JSON Backup)
+          </div>
+          <h3 class="text-lg font-bold text-white">Backup & Restore Across Any Computer</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Just like your Pig Farm system, your data stays 100% in your control. Download your students, comments, and lesson plans as a single <code>.json</code> file to move between your school PC, laptop, or home browser.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+          <button onclick="exportBackupJSON()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Backup (.json)
+          </button>
+          <label class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm">
+            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Restore (.json)
+            <input type="file" accept=".json" onchange="restoreBackupJSON(event)" class="hidden">
+          </label>
+        </div>
+      </div>
+
+      <!-- Module Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-emerald-300 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                <i data-lucide="file-text" class="w-6 h-6"></i>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Dual Column</span>
             </div>
+            <h3 class="text-lg font-bold text-slate-900">Report Card Comments (Batch Mode)</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              Column A (Strengths) and Column B (Needs). Synthesizes balanced 3-paragraph comments with live word counting, soft tone, and CSV export.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400">Editable-First</span>
+            <button onclick="switchTab('report-cards')" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors">
+              Open &rarr;
+            </button>
+          </div>
+        </div>
 
-            <!-- Logged User Info -->
-            <div class="sidebar-user">
-                <div class="user-avatar">👤</div>
-                <div class="user-details">
-                    <span class="user-name" id="user-display-name">Loading...</span>
-                    <span class="user-role badge badge-admin" id="user-display-role">Loading...</span>
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-blue-300 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
+                <i data-lucide="calendar-check" class="w-6 h-6"></i>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Editable Grid</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">45-Minute Lesson Plan Builder</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              4-phase structured timeline. Click any cell in the table to modify text before exporting to Word (.doc) or PDF.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400">Word (.doc) &amp; PDF</span>
+            <button onclick="switchTab('lesson-plans')" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors">
+              Open &rarr;
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-indigo-300 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center">
+                <i data-lucide="table" class="w-6 h-6"></i>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">4-Tier Scale</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Interactive Rubric Generator</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              Matrix across Exemplary (4), Proficient (3), Developing (2), and Beginning (1). Click any cell to edit, then download CSV or Word.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400">CSV &amp; Word</span>
+            <button onclick="switchTab('rubrics')" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-colors">
+              Open &rarr;
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-amber-300 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+                <i data-lucide="mail" class="w-6 h-6"></i>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">Tone Controls</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Parent Communication Writer</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              Compose progress reports, newsletters, and conference invites. 1-click copy directly to your clipboard.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400">1-Click Clipboard</span>
+            <button onclick="switchTab('communication')" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors">
+              Open &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- NEW: QUIZ & TEST CREATION -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-purple-300 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center">
+                <i data-lucide="help-circle" class="w-6 h-6"></i>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">Auto-Question Generator</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Quiz &amp; Test Creator</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              Generate Multiple-Choice, Fill-in-the-Blank, and Short-Answer questions from text snippets or transcripts. Includes printable answer keys.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400">Student &amp; Key Views</span>
+            <button onclick="switchTab('quiz-builder')" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-colors">
+              Open Quiz Maker &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- NEW: VISUAL HELPERS & DIAGRAM STUDIO -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-rose-300 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center">
+                <i data-lucide="image" class="w-6 h-6"></i>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">Royalty-Free Visuals</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Visual Helpers &amp; Diagrams</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              Create custom, non-copyrighted vector illustrations — cycles, plot mountains, Venn diagrams, and fraction models. 1-click SVG download for PowerPoint or Slides.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400">Slides &amp; Worksheets</span>
+            <button onclick="switchTab('visual-helpers')" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors">
+              Open Visual Studio &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: REPORT CARDS -->
+    <section id="tab-report-cards" class="tab-content space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="p-2 rounded-xl bg-emerald-100 text-emerald-800">
+              <i data-lucide="file-text" class="w-5 h-5 text-emerald-700"></i>
+            </span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Report Card Comments (Batch Mode)</h2>
+              <p class="text-xs text-slate-500">Teacher Albejean I. Rosabe &bull; Balanced Strengths + Needs Framework</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="exportCommentsCSV()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-slate-600"></i> Export All as CSV
+          </button>
+          <button onclick="bulkGenerateWithAI()" class="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold text-xs rounded-lg flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i> AI Batch Generate
+          </button>
+          <button onclick="bulkGeneratePending()" class="px-3.5 py-2 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 text-emerald-800 font-semibold text-xs rounded-lg flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-emerald-700"></i> Template Batch
+          </button>
+          <button onclick="addNewStudentRow()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Student Row
+          </button>
+        </div>
+      </div>
+      <div id="students-container" class="space-y-6"></div>
+    </section>
+
+    <!-- TAB 3: LESSON PLANS -->
+    <section id="tab-lesson-plans" class="tab-content space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div class="flex items-center gap-2">
+          <span class="p-2 rounded-xl bg-blue-100 text-blue-800">
+            <i data-lucide="calendar-check" class="w-5 h-5 text-blue-700"></i>
+          </span>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">45-Minute Lesson Plan Builder</h2>
+            <p class="text-xs text-slate-500">Click Any Cell in the Timetable Grid to Edit Directly</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="window.print()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-600"></i> Print / PDF
+          </button>
+          <button onclick="exportLessonWord()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-slate-600"></i> Export Word (.doc)
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs no-print">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Subject</label>
+            <input type="text" id="lp-subject" value="English Language Arts" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+          </div>
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Topic / Concept</label>
+            <input type="text" id="lp-topic" value="Character Inferences & Text Evidence" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+          </div>
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Grade Level</label>
+            <input type="text" id="lp-grade" value="Grade 5" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+          </div>
+          <div class="flex items-end gap-2">
+            <button onclick="generateLessonPlanWithAI()" class="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 shadow-xs">
+              <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i> Generate with AI
+            </button>
+            <button onclick="generateLessonPlan()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg flex items-center gap-1 shadow-xs" title="Template Mode">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="lesson-plan-canvas" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="border-b border-slate-200 pb-4">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">45-Minute Structured Lesson</span>
+          <div contenteditable="true" id="lp-title-display" class="editable-cell text-xl sm:text-2xl font-extrabold text-slate-900 p-1 rounded-lg mt-2">
+            Analyzing Character Motivations & Inferences
+          </div>
+          <div class="text-xs text-slate-600 mt-1">
+            Subject: <strong contenteditable="true" id="lp-subject-display" class="editable-cell px-1 font-semibold text-slate-800">English Language Arts</strong> &bull;
+            Grade: <strong contenteditable="true" id="lp-grade-display" class="editable-cell px-1 font-semibold text-slate-800">Grade 5</strong> &bull;
+            Duration: <strong class="text-slate-800">45 Minutes</strong>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="book-open" class="w-4 h-4 text-emerald-600"></i> 1. Learning Objectives
+          </h3>
+          <ul id="lp-objectives-list" class="space-y-1 pl-2 text-xs text-slate-800">
+            <li contenteditable="true" class="editable-cell p-1 rounded">&bull; Infer character traits and emotional motivations using cited textual evidence.</li>
+            <li contenteditable="true" class="editable-cell p-1 rounded">&bull; Explain how character choices propel the story plot during a collaborative read-aloud.</li>
+            <li contenteditable="true" class="editable-cell p-1 rounded">&bull; Complete a Character Detective organizer and formative Exit Ticket.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="calendar-check" class="w-4 h-4 text-indigo-600"></i> 2. 45-Minute Timetable Grid (Click any cell to edit)
+          </h3>
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-xs divide-y divide-slate-200">
+              <thead class="bg-slate-100 text-slate-700 font-bold uppercase">
+                <tr>
+                  <th class="p-3 w-16">Time</th>
+                  <th class="p-3 w-36">Phase</th>
+                  <th class="p-3">Student Activity</th>
+                  <th class="p-3">Teacher Facilitation</th>
+                </tr>
+              </thead>
+              <tbody id="lp-timeline-body" class="divide-y divide-slate-100 bg-white">
+                <tr>
+                  <td contenteditable="true" class="editable-cell p-3 font-mono font-bold text-indigo-800 bg-indigo-50/30">8 min</td>
+                  <td contenteditable="true" class="editable-cell p-3 font-semibold text-slate-900">Warm-up / Hook</td>
+                  <td contenteditable="true" class="editable-cell p-3 text-slate-800">Mystery Quote: 1-min Think-Pair-Share to infer speaker motivations.</td>
+                  <td contenteditable="true" class="editable-cell p-3 text-slate-700 bg-slate-50/40">Display quote; activate schema, record hypotheses on board.</td>
+                </tr>
+                <tr>
+                  <td contenteditable="true" class="editable-cell p-3 font-mono font-bold text-indigo-800 bg-indigo-50/30">15 min</td>
+                  <td contenteditable="true" class="editable-cell p-3 font-semibold text-slate-900">Direct Instruction</td>
+                  <td contenteditable="true" class="editable-cell p-3 text-slate-800">Explicit Modeling (I Do / We Do): Observe think-aloud on text evidence.</td>
+                  <td contenteditable="true" class="editable-cell p-3 text-slate-700 bg-slate-50/40">Model "Quote + Reasoning = Inference" formula under camera.</td>
+                </tr>
+                <tr>
+                  <td contenteditable="true" class="editable-cell p-3 font-mono font-bold text-indigo-800 bg-indigo-50/30">15 min</td>
+                  <td contenteditable="true" class="editable-cell p-3 font-semibold text-slate-900">Guided Practice</td>
+                  <td contenteditable="true" class="editable-cell p-3 text-slate-800">Paired Investigation: Work with partner to analyze assigned scene.</td>
+                  <td contenteditable="true" class="editable-cell p-3 text-slate-700 bg-slate-50/40">Circulate around room, provide targeted scaffolding conferences.</td>
+                </tr>
+                <tr>
+                  <td contenteditable="true" class="editable-cell p-3 font-mono font-bold text-indigo-800 bg-indigo-50/30">7 min</td>
+                  <td contenteditable="true" class="editable-cell p-3 font-semibold text-slate-900">Exit Ticket / Closure</td>
+                  <td contenteditable="true" class="editable-cell p-3 text-slate-800">Independent synthesis: 2-question Exit Slip on character choices.</td>
+                  <td contenteditable="true" class="editable-cell p-3 text-slate-700 bg-slate-50/40">Collect exit slips for immediate formative assessment analysis.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+          <span>Teacher: <strong>Teacher Albejean I. Rosabe</strong></span>
+          <span class="text-emerald-700 font-semibold">Ready for Execution</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: RUBRICS -->
+    <section id="tab-rubrics" class="tab-content space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div class="flex items-center gap-2">
+          <span class="p-2 rounded-xl bg-indigo-100 text-indigo-800">
+            <i data-lucide="table" class="w-5 h-5 text-indigo-700"></i>
+          </span>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Interactive Rubric Generator</h2>
+            <p class="text-xs text-slate-500">Click Any Cell to Edit Criterion, Weight, or Performance Level</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="window.print()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-600"></i> Print / PDF
+          </button>
+          <button onclick="exportRubricCSV()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-slate-600"></i> Export CSV
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-4">
+        <div class="border-b border-slate-200 pb-3">
+          <div contenteditable="true" id="rb-title-display" class="editable-cell text-xl font-extrabold text-slate-900 p-1 rounded-lg">
+            Informational & Explanatory Essay Rubric
+          </div>
+          <div class="text-xs text-slate-500">Teacher Albejean I. Rosabe &bull; Grade 5 English Language Arts</div>
+        </div>
+
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left text-xs divide-y divide-slate-200">
+            <thead class="bg-slate-100 text-slate-700 font-bold uppercase">
+              <tr>
+                <th class="p-3 w-40">Criterion (Weight)</th>
+                <th class="p-3 bg-emerald-50 text-emerald-900 border-l">Exemplary (4)</th>
+                <th class="p-3 bg-blue-50 text-blue-900 border-l">Proficient (3)</th>
+                <th class="p-3 bg-amber-50 text-amber-900 border-l">Developing (2)</th>
+                <th class="p-3 bg-rose-50 text-rose-900 border-l">Beginning (1)</th>
+              </tr>
+            </thead>
+            <tbody id="rubric-table-body" class="divide-y divide-slate-100 bg-white">
+              <tr>
+                <td class="p-3 align-top bg-slate-50/40">
+                  <div contenteditable="true" class="editable-cell font-bold text-slate-900">Focus & Thesis</div>
+                  <div class="text-[11px] text-indigo-700 font-semibold">(25%)</div>
+                </td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Topic is introduced with a captivating thesis. Focus maintained flawlessly.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Topic and thesis are clearly stated with logical focus throughout.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Topic is identified, but thesis is vague; focus occasionally drifts.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Main idea is unclear; essay lacks a central unifying focus.</td>
+              </tr>
+              <tr>
+                <td class="p-3 align-top bg-slate-50/40">
+                  <div contenteditable="true" class="editable-cell font-bold text-slate-900">Evidence & Support</div>
+                  <div class="text-[11px] text-indigo-700 font-semibold">(30%)</div>
+                </td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Skillfully integrates relevant facts, quotes, and clear citations.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Includes sufficient accurate facts and details supporting the topic.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Provides limited evidence; some facts lack clear explanation.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Very little or no supporting evidence provided.</td>
+              </tr>
+              <tr>
+                <td class="p-3 align-top bg-slate-50/40">
+                  <div contenteditable="true" class="editable-cell font-bold text-slate-900">Organization</div>
+                  <div class="text-[11px] text-indigo-700 font-semibold">(25%)</div>
+                </td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Purposeful structure with varied transitions and insightful conclusion.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Logical structure with clear sequencing and complete conclusion.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Basic structure present, but transitions are somewhat repetitive.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Disorganized structure makes ideas difficult to follow.</td>
+              </tr>
+              <tr>
+                <td class="p-3 align-top bg-slate-50/40">
+                  <div contenteditable="true" class="editable-cell font-bold text-slate-900">Mechanics & Style</div>
+                  <div class="text-[11px] text-indigo-700 font-semibold">(20%)</div>
+                </td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Outstanding command of Grade 5 grammar, punctuation, and vocabulary.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Good control of conventions with minimal non-distracting errors.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Noticeable errors in grammar or spelling that occasionally distract.</td>
+                <td contenteditable="true" class="editable-cell p-3 align-top border-l leading-relaxed">Frequent errors significantly obscure author meaning.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: PARENT COMMUNICATION -->
+    <section id="tab-communication" class="tab-content space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div class="flex items-center gap-2">
+          <span class="p-2 rounded-xl bg-amber-100 text-amber-800">
+            <i data-lucide="mail" class="w-5 h-5 text-amber-700"></i>
+          </span>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Parent Communication Writer</h2>
+            <p class="text-xs text-slate-500">Teacher Albejean I. Rosabe &bull; Compassionate Family Engagement</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 no-print">
+          <button onclick="copyCommEmail()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy to Clipboard
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-5 space-y-4 no-print">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Message Settings</h3>
+            <div>
+              <label class="text-xs font-medium text-slate-600 block mb-1">Type</label>
+              <select id="comm-type" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 bg-white">
+                <option value="progress">Classroom Progress Update</option>
+                <option value="needs">Needs Improvement & Academic Partnership</option>
+                <option value="newsletter">Weekly Highlights Newsletter</option>
+                <option value="conference">Conference Invitation</option>
+              </select>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs font-medium text-slate-600 block mb-1">Student Name</label>
+                <input type="text" id="comm-student" value="Mateo Hernandez" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+              </div>
+              <div>
+                <label class="text-xs font-medium text-slate-600 block mb-1">Parent Name</label>
+                <input type="text" id="comm-parent" value="Mr. and Mrs. Hernandez" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+              </div>
+            </div>
+            <div>
+              <label class="text-xs font-medium text-slate-600 block mb-1">Specific Observations</label>
+              <textarea id="comm-notes" rows="3" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">Curiosity in science; needs reminder to record homework in agenda.</textarea>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="generateCommunicationWithAI()" class="flex-1 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 shadow-xs">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-200"></i> Compose with AI
+              </button>
+              <button onclick="generateCommunication()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg flex items-center gap-1 shadow-xs" title="Template Mode">
+                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-4">
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+            <div>
+              <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Subject Line</label>
+              <input type="text" id="comm-subject" value="Classroom Progress Update: Celebrating Mateo's Growth & Partnering on Organization" class="w-full text-sm font-bold text-slate-900 p-2.5 rounded-lg border border-slate-200 bg-amber-50/20">
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Email Body</label>
+              <textarea id="comm-body" rows="11" class="w-full text-xs sm:text-sm leading-relaxed p-4 rounded-xl border border-slate-200 text-slate-800 font-sans shadow-inner">Dear Mr. and Mrs. Hernandez,
+
+I hope you are having a wonderful week! I wanted to take a moment to share an update on Mateo's recent learning journey in our classroom.
+
+Mateo has shown tremendous curiosity and enthusiasm during our Grade 5 Science exploration this month. He actively participated in our hands-on investigations and was very supportive and kind to his group partners.
+
+To build upon this great momentum, we are currently working together on strengthening his daily organization habits. Taking a moment at the end of each subject to write homework tasks in his agenda and organize his study folder will ensure all of his wonderful work is turned in on time.
+
+Thank you so much for your partnership and warm encouragement at home. Please let me know if you have any questions!
+
+Warm regards,
+Teacher Albejean I. Rosabe
+Grade 5 Educator</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 6: QUIZ & TEST CREATOR -->
+    <!-- ============================================================= -->
+    <section id="tab-quiz-builder" class="tab-content space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div class="flex items-center gap-2">
+          <span class="p-2 rounded-xl bg-purple-100 text-purple-800">
+            <i data-lucide="help-circle" class="w-5 h-5 text-purple-700"></i>
+          </span>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Quiz &amp; Test Creation Engine</h2>
+            <p class="text-xs text-slate-500">Teacher Albejean I. Rosabe &bull; Generate MCQ, Fill-in-the-Blank &amp; Short-Answer from Text</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="toggleQuizAnswerKey()" id="btn-toggle-key" class="px-3.5 py-2 bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-800 font-semibold text-xs rounded-lg flex items-center gap-1.5 transition-all">
+            <i data-lucide="eye" class="w-3.5 h-3.5"></i> <span id="key-btn-text">Show Answer Key</span>
+          </button>
+          <button onclick="window.print()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-600"></i> Print Test Paper
+          </button>
+          <button onclick="exportQuizWord()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-slate-600"></i> Export Word (.doc)
+          </button>
+          <button onclick="addNewQuizQuestion()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Question
+          </button>
+        </div>
+      </div>
+
+      <!-- AI API Key Setup -->
+      <div id="ai-setup-bar" class="bg-gradient-to-r from-purple-900 to-indigo-900 text-white p-4 rounded-2xl border border-purple-700 no-print space-y-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
+          <span class="text-xs font-bold uppercase tracking-wider text-purple-200">🤖 Gemini AI — Real Question Generator (Free)</span>
+          <span class="ml-auto text-xs text-purple-300">Get free key: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="underline text-amber-300 font-bold">aistudio.google.com</a></span>
+        </div>
+        <div class="flex gap-2">
+          <input type="password" id="gemini-api-key" placeholder="Paste your free Gemini API key here (AIza...)" class="flex-1 text-xs p-2.5 rounded-lg border border-purple-500 bg-purple-800/60 text-white placeholder-purple-300 focus:outline-none focus:border-amber-400">
+          <button onclick="saveGeminiKey()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-xs rounded-lg whitespace-nowrap">Save Key</button>
+          <button onclick="clearGeminiKey()" class="px-3 py-2 bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs rounded-lg">Clear</button>
+        </div>
+        <div id="ai-key-status" class="text-xs text-purple-300">No key saved — using template mode. With a key, AI generates real Grade 5 questions on any topic.</div>
+      </div>
+
+      <!-- Generator Input Box -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs no-print space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Generate Quiz</h3>
+          <span id="ai-mode-badge" class="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500">Template Mode</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Assessment Title</label>
+            <input type="text" id="qz-title-input" value="Grade 5 Science: Photosynthesis" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+          </div>
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Topic / Subject (AI uses this)</label>
+            <input type="text" id="qz-topic-input" placeholder="e.g. Water Cycle, Battle of Mactan, Fractions..." class="w-full text-xs p-2.5 rounded-lg border border-purple-300 focus:border-purple-500 bg-purple-50">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Question Type Mix</label>
+            <select id="qz-type-select" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 bg-white">
+              <option value="mixed">Mixed Assessment (MCQ + Blanks + Short Answer)</option>
+              <option value="mcq">Multiple-Choice Only (A, B, C, D)</option>
+              <option value="fill">Fill-in-the-Blank Only</option>
+              <option value="short">Short Answer Only</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-medium text-slate-600 block mb-1">Number of Questions</label>
+            <select id="qz-count-select" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 bg-white">
+              <option value="5">5 Comprehensive Questions</option>
+              <option value="8">8 In-depth Questions</option>
+              <option value="3">3 Quick Exit Check Questions</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-medium text-slate-600 block mb-1">Optional: Paste Text / Transcript (or leave blank to use AI on topic alone)</label>
+          <textarea id="qz-source-text" rows="3" class="w-full text-xs p-3 rounded-xl border border-slate-300 focus:border-purple-500 font-sans" placeholder="Paste lesson text here, OR just type a topic above and click Generate with AI..."></textarea>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="generateQuizWithAI()" id="btn-ai-generate" class="flex-1 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm">
+            <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i> <span id="ai-btn-label">Generate with AI (Gemini)</span>
+          </button>
+          <button onclick="generateQuizFromText()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-3.5 h-3.5"></i> Template Mode
+          </button>
+        </div>
+      </div>
+
+      <!-- Printable Quiz Canvas -->
+      <div id="quiz-canvas" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-10 space-y-6">
+        <div class="border-b-2 border-slate-800 pb-4 space-y-4">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>Teacher: <strong>Teacher Albejean I. Rosabe</strong></span>
+            <span>Date: ____________________</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <div contenteditable="true" id="qz-title-display" class="editable-cell text-xl sm:text-2xl font-extrabold text-slate-900 p-1 rounded-lg">
+                Grade 5 Science: Photosynthesis &amp; Ecosystem Energy Flow
+              </div>
+              <p class="text-xs text-slate-500 px-1 mt-0.5">Directions: Read each question carefully and write your answers neatly.</p>
+            </div>
+            <div class="text-right text-xs">
+              <span class="block font-semibold">Student Name: _____________________</span>
+              <span class="block text-slate-500 mt-1">Score: ______ / <span id="qz-total-pts">20</span></span>
+            </div>
+          </div>
+        </div>
+        <!-- Questions List Container -->
+        <div id="quiz-questions-list" class="space-y-6"></div>
+        <div class="pt-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-400">
+          <span>Prepared by Teacher Albejean I. Rosabe</span>
+          <span>End of Assessment</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 7: VISUAL HELPERS & DIAGRAM STUDIO -->
+    <!-- ============================================================= -->
+    <section id="tab-visual-helpers" class="tab-content space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div class="flex items-center gap-2">
+          <span class="p-2 rounded-xl bg-rose-100 text-rose-800">
+            <i data-lucide="image" class="w-5 h-5 text-rose-700"></i>
+          </span>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Visual Helpers &amp; Educational Diagram Studio</h2>
+            <p class="text-xs text-slate-500">Teacher Albejean I. Rosabe &bull; Non-Copyrighted Illustrations for Slides &amp; Worksheets</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="downloadVisualSVG()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-slate-600"></i> Download SVG Vector
+          </button>
+          <button onclick="window.print()" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+            <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-600"></i> Print Visual
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Visual Generator Sidebar -->
+        <div class="lg:col-span-4 space-y-4 no-print">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Choose Diagram Template</h3>
+            <div class="space-y-2">
+              <button onclick="selectDiagramType('cycle')" class="w-full text-left p-3 rounded-xl border border-emerald-200 hover:bg-emerald-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="refresh-cw" class="w-4 h-4 text-emerald-600"></i> 4-Stage Cycle Diagram (e.g. Life/Water Cycle)</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+              <button onclick="selectDiagramType('plot')" class="w-full text-left p-3 rounded-xl border border-blue-200 hover:bg-blue-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="mountain" class="w-4 h-4 text-blue-600"></i> Story Plot Mountain (Hook &rarr; Climax &rarr; End)</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+              <button onclick="selectDiagramType('venn')" class="w-full text-left p-3 rounded-xl border border-indigo-200 hover:bg-indigo-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="git-merge" class="w-4 h-4 text-indigo-600"></i> Venn Diagram (Compare &amp; Contrast)</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+              <button onclick="selectDiagramType('fractions')" class="w-full text-left p-3 rounded-xl border border-amber-200 hover:bg-amber-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-amber-600"></i> Math Fractions Visualizer (Halves, 4ths, 8ths)</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+              <button onclick="selectDiagramType('anchor')" class="w-full text-left p-3 rounded-xl border border-rose-200 hover:bg-rose-50 text-xs font-semibold flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2"><i data-lucide="award" class="w-4 h-4 text-rose-600"></i> Classroom Anchor Chart &amp; Goal Banner</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+              </button>
+            </div>
+            <div class="pt-2 border-t border-slate-100 space-y-3">
+              <div>
+                <label class="text-xs font-medium text-slate-600 block mb-1">Diagram Title (Editable)</label>
+                <input type="text" id="diag-title-input" value="The Water Cycle: Earth's Continuous Journey" oninput="updateDiagramTitle(this.value)" class="w-full text-xs p-2.5 rounded-lg border border-slate-300">
+              </div>
+              <div>
+                <label class="text-xs font-medium text-slate-600 block mb-1">Color Palette</label>
+                <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                  <button onclick="setDiagramColor('emerald')" class="p-2 rounded-lg bg-emerald-600 text-white font-bold">Green</button>
+                  <button onclick="setDiagramColor('blue')" class="p-2 rounded-lg bg-blue-600 text-white font-bold">Blue</button>
+                  <button onclick="setDiagramColor('purple')" class="p-2 rounded-lg bg-purple-600 text-white font-bold">Purple</button>
+                  <button onclick="setDiagramColor('amber')" class="p-2 rounded-lg bg-amber-600 text-white font-bold">Amber</button>
                 </div>
+              </div>
             </div>
-
-            <!-- Nav Items -->
-            <nav class="sidebar-nav">
-                <a href="#dashboard" class="nav-link active" data-page="dashboard">
-                    <span class="nav-icon">📊</span> Dashboard
-                </a>
-                <a href="#pigs" class="nav-link" data-page="pigs">
-                    <span class="nav-icon">🐷</span> Pig Records
-                </a>
-                <a href="#batches" class="nav-link" data-page="batches">
-                    <span class="nav-icon">📦</span> Batches & History
-                </a>
-                <a href="#poultry" class="nav-link" data-page="poultry">
-                    <span class="nav-icon">🐔</span> Poultry Manager
-                </a>
-                <a href="#feeding" class="nav-link" data-page="feeding">
-                    <span class="nav-icon">🌾</span> Feeding Logs
-                </a>
-                <a href="#medicine" class="nav-link" data-page="medicine">
-                    <span class="nav-icon">💊</span> Medical Logs
-                </a>
-                <a href="#weight" class="nav-link" data-page="weight">
-                    <span class="nav-icon">⚖️</span> Weight Logs
-                </a>
-                <a href="#expenses" class="nav-link" data-page="expenses">
-                    <span class="nav-icon">💸</span> General Expenses
-                </a>
-                <a href="#income" class="nav-link" data-page="income">
-                    <span class="nav-icon">💰</span> Income & Sales
-                </a>
-                <a href="#housing" class="nav-link" data-page="housing">
-                    <span class="nav-icon">🏠</span> Pen / Housing
-                </a>
-                <a href="#breeding" class="nav-link" data-page="breeding">
-                    <span class="nav-icon">🐖</span> Breeding Logs
-                </a>
-                <a href="#reports" class="nav-link" data-page="reports">
-                    <span class="nav-icon">📈</span> Profit Reports
-                </a>
-                <a href="#sync" class="nav-link" data-page="sync">
-                    <span class="nav-icon">📲</span> QR Device Sync
-                </a>
-                <a href="#users" class="nav-link admin-only hidden" data-page="users">
-                    <span class="nav-icon">👥</span> User Access
-                </a>
-                <a href="#settings" class="nav-link admin-only hidden" data-page="settings">
-                    <span class="nav-icon">⚙️</span> System Settings
-                </a>
-            </nav>
-
-            <!-- Bottom Control -->
-            <div class="sidebar-footer">
-                <button class="btn btn-secondary" id="logout-btn" style="width: 100%;">🚪 Logout</button>
+            <div class="p-3 bg-rose-50/60 rounded-xl border border-rose-200 text-rose-900 text-xs leading-relaxed">
+              <strong>100% Non-Copyrighted:</strong> Generated as clean SVG vector graphics. Perfect to insert into PowerPoint, Google Slides, Canva, and printed worksheets.
             </div>
-        </aside>
-
-        <!-- Main Workspace -->
-        <main class="main-content" id="main-content">
-            <!-- Loaded dynamically based on navigation routing -->
-        </main>
-    </div>
-
-    <!-- 3. MODAL DIALOG CONTAINER OVERLAY -->
-    <div id="modal-overlay" class="modal-overlay hidden">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 id="modal-title">Modal Title</h3>
-                <button class="modal-close" onclick="App.closeModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="modal-body">
-                <!-- Loaded dynamically -->
-            </div>
-            <div class="modal-footer" id="modal-footer">
-                <!-- Loaded dynamically -->
-            </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Application Script Chains -->
-    <script src="js/db.js"></script>
-    <script src="js/qr-sync.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/pages.js"></script>
+        <!-- Visual Canvas View -->
+        <div class="lg:col-span-8 space-y-4">
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-4 flex flex-col items-center">
+            <div class="w-full flex items-center justify-between border-b border-slate-100 pb-3">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">Vector SVG Diagram Studio</span>
+              <span class="text-xs text-slate-400">Crisp at Any Zoom &bull; Print Ready</span>
+            </div>
+            <!-- SVG Container -->
+            <div id="svg-render-container" class="w-full max-w-2xl bg-slate-50/70 p-4 rounded-2xl border border-slate-200 flex justify-center items-center min-h-96">
+              <!-- Dynamic SVG renders here -->
+            </div>
+            <div class="w-full flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+              <span>Teacher: <strong>Teacher Albejean I. Rosabe</strong></span>
+              <span>Click Download SVG to use in PowerPoint / Google Slides</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 no-print mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>&copy; 2026 <strong>Rosabe AI Assistant</strong> &bull; Personalized for <strong>Teacher Albejean I. Rosabe</strong></p>
+      <p class="text-slate-400">Standalone Web App &bull; GitHub Pages & Offline Ready</p>
+    </div>
+  </footer>
+
+  <script>
+    function refreshIcons() {
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => {
+        el.className = 'nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:bg-slate-100';
+      });
+
+      const activeTab = document.getElementById('tab-' + tabId);
+      const activeBtn = document.getElementById('nav-' + tabId);
+      if (activeTab) activeTab.classList.add('active');
+      if (activeBtn) {
+        activeBtn.className = 'nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all bg-emerald-50 text-emerald-800 border border-emerald-200';
+      }
+      refreshIcons();
+    }
+
+    let studentComments = [
+      {
+        id: 's-1',
+        name: 'Liam Vance',
+        pronouns: 'He/Him',
+        grade: 'Grade 5 English Language Arts',
+        strengths: '• Outstanding vocabulary and creative writing\n• Frequently shares thoughtful story interpretations\n• Kind and cooperative peer',
+        needs: '• Often rushes through assignments without self-review\n• Struggles with punctuation consistency\n• Needs reminders during transitions',
+        comment: 'Liam has shown admirable enthusiasm throughout this grading period in Grade 5 English Language Arts. He consistently demonstrates remarkable strengths in vocabulary and creative writing, frequently sharing thoughtful story interpretations during discussions. His positive energy and willingness to cooperate continue to be an asset to our classroom.\n\nTo support his continued academic growth and foster greater independence, our primary focus areas will center on slowing down to review written work thoroughly prior to submission. Practicing self-editing checklists will help improve his punctuation consistency.\n\nIt has been an absolute pleasure teaching Liam this term. I look forward to partnering closely with you as we celebrate his ongoing accomplishments.',
+        reviewed: false
+      },
+      {
+        id: 's-2',
+        name: 'Sophia Chen',
+        pronouns: 'She/Her',
+        grade: 'Grade 5 Mathematics',
+        strengths: '• High precision in mental math calculations\n• Shows perseverance when tackling fractions\n• Generously assists classmates',
+        needs: '• Hesitant to show step-by-step written work in notebooks\n• Occasionally feels anxious during timed drills',
+        comment: 'Sophia has had an exceptional term in Grade 5 Mathematics, demonstrating high precision in mental math calculations and admirable perseverance when tackling multi-step fractions. She is also a compassionate peer who generously assists classmates during problem-solving activities.\n\nMoving forward, our goal is to build Sophia’s confidence in documenting all written calculation steps in her math journal, which will solidify her reasoning and reduce anxiety during timed check-ins.\n\nI am incredibly proud of Sophia’s dedication and look forward to watching her skills flourish even further.',
+        reviewed: true
+      }
+    ];
+
+    function renderStudents() {
+      const container = document.getElementById('students-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      studentComments.forEach((s, idx) => {
+        const words = s.comment ? s.comment.trim().split(/\s+/).filter(Boolean).length : 0;
+        const card = document.createElement('div');
+        card.className = `bg-white rounded-2xl border-2 ${s.reviewed ? 'border-emerald-200 bg-emerald-50/10' : 'border-slate-200'} p-6 shadow-sm space-y-5`;
+        card.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center text-sm">
+                ${s.name.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <input type="text" value="${s.name}" onchange="studentComments[${idx}].name = this.value" class="font-bold text-slate-900 text-base border-b border-transparent hover:border-slate-300 focus:outline-none px-1">
+                  <select onchange="studentComments[${idx}].pronouns = this.value" class="text-xs bg-slate-100 text-slate-700 font-medium px-2 py-1 rounded-md border-0">
+                    <option value="They/Them" ${s.pronouns === 'They/Them' ? 'selected' : ''}>They/Them</option>
+                    <option value="He/Him" ${s.pronouns === 'He/Him' ? 'selected' : ''}>He/Him</option>
+                    <option value="She/Her" ${s.pronouns === 'She/Her' ? 'selected' : ''}>She/Her</option>
+                  </select>
+                </div>
+                <input type="text" value="${s.grade}" onchange="studentComments[${idx}].grade = this.value" class="text-xs text-slate-500 border-b border-transparent hover:border-slate-300 focus:outline-none px-1">
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="toggleReviewed(${idx})" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold ${s.reviewed ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-slate-100 text-slate-600 border border-slate-200'}">
+                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 ${s.reviewed ? 'text-emerald-600' : 'text-slate-400'}"></i>
+                ${s.reviewed ? 'Reviewed & Final' : 'Mark as Reviewed'}
+              </button>
+              ${studentComments.length > 1 ? `<button onclick="deleteStudent(${idx})" class="p-1.5 text-slate-400 hover:text-rose-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-bold uppercase text-emerald-800 mb-1 block">Column A: Student Strengths & Positives</label>
+              <textarea rows="3" onchange="studentComments[${idx}].strengths = this.value" class="w-full text-xs p-2.5 rounded-lg border border-emerald-200 bg-emerald-50/20 text-slate-800">${s.strengths}</textarea>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase text-amber-900 mb-1 block">Column B: Needs / Areas to Improve</label>
+              <textarea rows="3" onchange="studentComments[${idx}].needs = this.value" class="w-full text-xs p-2.5 rounded-lg border border-amber-200 bg-amber-50/20 text-slate-800">${s.needs}</textarea>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="synthesizeComment(${idx}, 'standard')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 shadow-xs">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i> Generate Balanced Comment
+            </button>
+            <button onclick="synthesizeComment(${idx}, 'soft')" class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-semibold text-xs rounded-lg flex items-center gap-1.5">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-emerald-700"></i> Soft Tone
+            </button>
+          </div>
+
+          <div class="space-y-2 pt-2 border-t border-slate-100">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-slate-700 uppercase">Final Report Card Comment (Editable)</label>
+              <span class="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">${words} words</span>
+            </div>
+            <textarea rows="6" oninput="studentComments[${idx}].comment = this.value; renderStudents();" class="w-full text-sm leading-relaxed p-3.5 rounded-lg border-2 border-emerald-400/60 focus:border-emerald-600 text-slate-800 shadow-inner font-sans">${s.comment}</textarea>
+            <div class="flex items-center justify-between pt-1">
+              <button onclick="copyText(studentComments[${idx}].comment)" class="px-3 py-1.5 bg-white border border-slate-300 text-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy to Clipboard
+              </button>
+              <span class="text-[11px] text-slate-400">Para 1: Strengths &bull; Para 2: Needs &bull; Para 3: Encouraging Close</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      refreshIcons();
+    }
+
+    function toggleReviewed(idx) {
+      studentComments[idx].reviewed = !studentComments[idx].reviewed;
+      renderStudents();
+    }
+
+    function deleteStudent(idx) {
+      studentComments.splice(idx, 1);
+      renderStudents();
+    }
+
+    function addNewStudentRow() {
+      studentComments.unshift({
+        id: 's-' + Date.now(),
+        name: 'New Student',
+        pronouns: 'They/Them',
+        grade: 'Grade 5',
+        strengths: '• Active learner\n• Cooperative partner',
+        needs: '• Review work before submitting\n• Practice multi-step directions',
+        comment: '',
+        reviewed: false
+      });
+      renderStudents();
+    }
+
+    function synthesizeComment(idx, tone) {
+      const s = studentComments[idx];
+      const isHe = s.pronouns.toLowerCase().includes('he');
+      const isShe = s.pronouns.toLowerCase().includes('she');
+      const subj = isHe ? 'He' : isShe ? 'She' : 'They';
+      const obj = isHe ? 'him' : isShe ? 'her' : 'them';
+      const pos = isHe ? 'his' : isShe ? 'her' : 'their';
+      const posCap = isHe ? 'His' : isShe ? 'Her' : 'Their';
+      const verbHas = isHe || isShe ? 'has' : 'have';
+
+      const sArr = s.strengths.split('\n').filter(Boolean).map(x => x.replace(/^[-*•]\s*/, '')).join(', ');
+      const nArr = s.needs.split('\n').filter(Boolean).map(x => x.replace(/^[-*•]\s*/, '')).join(', ');
+
+      const p1 = `${s.name} ${verbHas} shown admirable enthusiasm and dedication throughout this grading period in ${s.grade}. ${subj} consistently demonstrates remarkable strengths in ${sArr || 'enthusiastic participation and thoughtful contributions'}. In our classroom, ${s.name} frequently contributes meaningful insights and engages cooperatively with peers. ${posCap} positive attitude continues to be a true asset to our learning community.`;
+      const p2 = `To support ${pos} continued academic growth and foster greater independence, our primary focus areas will center on ${nArr || 'reviewing work and managing pacing'}. At times, ${s.name} would benefit from taking a moment to review work thoroughly prior to submission and implementing structured checklists for multi-step tasks. With continued guidance at school and consistent reinforcement at home, I am confident ${subj.toLowerCase()} will build stronger self-monitoring strategies.`;
+      const p3 = `It has been an absolute pleasure teaching ${s.name} this term. I look forward to partnering closely with you as we celebrate ${pos} ongoing accomplishments and guide ${obj} toward reaching ${pos} fullest potential in ${s.grade}.`;
+
+      s.comment = `${p1}\n\n${p2}\n\n${p3}`;
+      renderStudents();
+    }
+
+    function bulkGeneratePending() {
+      studentComments.forEach((s, idx) => {
+        if (!s.comment || s.comment.trim() === '') {
+          synthesizeComment(idx, 'standard');
+        }
+      });
+      renderStudents();
+    }
+
+    function exportCommentsCSV() {
+      const headers = ['Student Name', 'Pronouns', 'Grade/Subject', 'Strengths', 'Needs Improvement', 'Final Comment', 'Reviewed'];
+      const rows = studentComments.map(s => [
+        `"${s.name.replace(/"/g, '""')}"`,
+        `"${s.pronouns.replace(/"/g, '""')}"`,
+        `"${s.grade.replace(/"/g, '""')}"`,
+        `"${s.strengths.replace(/"/g, '""')}"`,
+        `"${s.needs.replace(/"/g, '""')}"`,
+        `"${s.comment.replace(/"/g, '""')}"`,
+        s.reviewed ? 'Yes' : 'No'
+      ]);
+      const csv = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+      downloadFile(csv, 'Teacher_Albejean_Report_Cards.csv', 'text/csv;charset=utf-8;');
+    }
+
+    function generateLessonPlan() {
+      const sub = document.getElementById('lp-subject').value;
+      const top = document.getElementById('lp-topic').value;
+      const grd = document.getElementById('lp-grade').value;
+      document.getElementById('lp-title-display').innerText = `${top} — Master Inquiry & Practice`;
+      document.getElementById('lp-subject-display').innerText = sub;
+      document.getElementById('lp-grade-display').innerText = grd;
+      alert('45-minute lesson generated! You can click any cell to edit.');
+      refreshIcons();
+    }
+
+    function exportLessonWord() {
+      const title = document.getElementById('lp-title-display').innerText;
+      const sub = document.getElementById('lp-subject-display').innerText;
+      const grd = document.getElementById('lp-grade-display').innerText;
+      const content = document.getElementById('lesson-plan-canvas').innerHTML;
+      const html = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head><meta charset='utf-8'><title>${title}</title>
+        <style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;padding:20px;} h1{color:#15803d;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #94a3b8;padding:8px;}</style>
+        </head><body>
+        <h1>${title}</h1>
+        <p><strong>Teacher:</strong> Teacher Albejean I. Rosabe | <strong>Subject:</strong> ${sub} | <strong>Grade:</strong> ${grd}</p>
+        ${content}
+        </body></html>
+      `;
+      downloadFile(html, `${title.replace(/\s+/g, '_')}.doc`, 'application/msword;charset=utf-8');
+    }
+
+    function exportRubricCSV() {
+      const title = document.getElementById('rb-title-display').innerText;
+      let csv = `\uFEFF"Rubric: ${title}"\r\nCriterion,Weight,Exemplary (4),Proficient (3),Developing (2),Beginning (1)\r\n`;
+      document.querySelectorAll('#rubric-table-body tr').forEach(row => {
+        const cols = Array.from(row.querySelectorAll('td')).map(td => `"${td.innerText.replace(/"/g, '""').replace(/\n/g, ' ')}"`);
+        csv += cols.join(',') + '\r\n';
+      });
+      downloadFile(csv, `${title.replace(/\s+/g, '_')}.csv`, 'text/csv;charset=utf-8;');
+    }
+
+    function generateCommunication() {
+      const student = document.getElementById('comm-student').value;
+      const parent = document.getElementById('comm-parent').value;
+      const notes = document.getElementById('comm-notes').value;
+      const type = document.getElementById('comm-type').value;
+
+      let subj = `Classroom Update: Celebrating ${student}'s Progress`;
+      let body = `Dear ${parent},\n\nI hope you are having a wonderful week! I wanted to share a brief update on ${student}'s recent learning journey in our classroom.\n\n${student} has shown tremendous curiosity and enthusiastic participation during our lessons. Specifically, ${notes}\n\nThank you so much for your continued partnership and support at home. Please feel free to reach out anytime!\n\nWarm regards,\nTeacher Albejean I. Rosabe`;
+
+      document.getElementById('comm-subject').value = subj;
+      document.getElementById('comm-body').value = body;
+      alert('Communication draft generated!');
+      refreshIcons();
+    }
+
+    function copyCommEmail() {
+      const subj = document.getElementById('comm-subject').value;
+      const body = document.getElementById('comm-body').value;
+      copyText(`Subject: ${subj}\n\n${body}`);
+    }
+
+
+    // ==========================================
+    // SHARED ROBUST GEMINI AI ENGINE
+    // ==========================================
+    async function requestGeminiApi(prompt, maxTokens = 2048) {
+      const apiKey = localStorage.getItem('rosabe_gemini_key');
+      if (!apiKey) return { success: false, error: 'NO_KEY' };
+
+      // Ensure obsolete models are purged from cache
+      let cached = localStorage.getItem('rosabe_working_gemini_model');
+      if (cached === 'gemini-pro' || cached === 'models/gemini-pro') {
+        localStorage.removeItem('rosabe_working_gemini_model');
+        cached = null;
+      }
+
+      const candidateModels = [
+        'gemini-flash-latest',
+        'gemini-2.0-flash',
+        'gemini-1.5-flash',
+        'gemini-1.5-flash-latest',
+        'gemini-1.5-pro'
+      ];
+      
+      if (cached && candidateModels.includes(cached)) {
+        candidateModels.splice(candidateModels.indexOf(cached), 1);
+        candidateModels.unshift(cached);
+      }
+
+      let lastError = null;
+
+      for (const model of candidateModels) {
+        // Try header auth first (preferred for AQ. keys), then query param auth (for AIza keys)
+        const attempts = [
+          { url: `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey } },
+          { url: `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, headers: { 'Content-Type': 'application/json' } }
+        ];
+
+        for (const attempt of attempts) {
+          try {
+            const res = await fetch(attempt.url, {
+              method: 'POST',
+              headers: attempt.headers,
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.7, maxOutputTokens: maxTokens }
+              })
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+              localStorage.setItem('rosabe_working_gemini_model', model);
+              return { success: true, text: text };
+            }
+
+            const errJson = await res.json().catch(() => ({}));
+            const errMsg = errJson.error?.message || `HTTP ${res.status}`;
+            lastError = errMsg;
+
+            // If 404 or unsupported model, skip to next model
+            if (res.status === 404 || errMsg.toLowerCase().includes('not found') || errMsg.toLowerCase().includes('not supported')) {
+              break; // break inner loop to try next model
+            }
+          } catch(netErr) {
+            lastError = netErr.message;
+          }
+        }
+      }
+      return { success: false, error: lastError || 'Unable to reach Gemini API models.' };
+    }
+
+    async function callGeminiAI(prompt, loadingEl, loadingText) {
+      const apiKey = localStorage.getItem('rosabe_gemini_key');
+      if (!apiKey) {
+        alert('No Gemini API key saved!\n\nGo to the "Quiz & Test Maker" tab → paste your free key in the purple bar → Save Key.\n\nGet a free key at: aistudio.google.com');
+        return null;
+      }
+      if (loadingEl) {
+        loadingEl._orig = loadingEl.innerHTML;
+        loadingEl.innerHTML = '<svg class="animate-spin w-4 h-4 inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg> ' + (loadingText || 'Generating with AI...');
+        loadingEl.disabled = true;
+      }
+      try {
+        const result = await requestGeminiApi(prompt, 2048);
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+        return result.text;
+      } catch(err) {
+        alert('❌ AI Error: ' + err.message + '\n\nCheck your API key in the Quiz & Test Maker tab.');
+        return null;
+      } finally {
+        if (loadingEl) {
+          loadingEl.innerHTML = loadingEl._orig;
+          loadingEl.disabled = false;
+          refreshIcons();
+        }
+      }
+    }
+
+    // ==========================================
+    // AI: REPORT CARDS — BULK GENERATE
+    // ==========================================
+    async function bulkGenerateWithAI() {
+      if (!studentComments || studentComments.length === 0) { alert('No students added yet. Add student rows first!'); return; }
+      const pending = studentComments.filter(s => !s.comment || s.comment.trim() === '' || s.comment.includes('Loading'));
+      if (pending.length === 0) { alert('All students already have comments! Clear some first or add new rows.'); return; }
+      const apiKey = localStorage.getItem('rosabe_gemini_key');
+      if (!apiKey) { alert('No Gemini API key!\n\nGo to Quiz & Test Maker tab → paste your free key in the purple bar.\n\nGet free key at: aistudio.google.com'); return; }
+      if (!confirm(`Generate AI comments for ${pending.length} student(s) with missing comments?\n\nThis uses your Gemini API key.`)) return;
+
+      for (const s of pending) {
+        const prompt = `You are a Grade 5 teacher named Teacher Albejean I. Rosabe writing a report card comment for a student.
+
+Student: ${s.name || 'the student'}
+Strengths: ${s.strengths || 'participates in class, shows effort'}
+Areas for Improvement: ${s.needs || 'needs to review homework regularly'}
+
+Write a warm, professional 3-paragraph report card comment (about 80-100 words total):
+- Paragraph 1: Start with a positive strength observation
+- Paragraph 2: Note one area to improve with encouragement
+- Paragraph 3: End with encouragement and a partnership message to parents
+
+Use "he/she" based on common Filipino names if unclear. Use the student's first name. Be warm and specific.
+Return ONLY the comment text, no labels, no JSON.`;
+
+        const res = await requestGeminiApi(prompt, 400);
+        if (res.success && res.text) {
+          const text = res.text.trim();
+          s.comment = text;
+          s.wordCount = text.split(/\s+/).length;
+        }
+      }
+      localStorage.setItem('rosabe_backup_students', JSON.stringify(studentComments));
+      renderStudents();
+      alert(`✅ AI generated comments for ${pending.length} student(s)!\n\nClick any comment to edit it.`);
+    }
+
+    // ==========================================
+    // AI: LESSON PLAN GENERATOR
+    // ==========================================
+    async function generateLessonPlanWithAI() {
+      const subject = document.getElementById('lp-subject').value || 'Science';
+      const topic = document.getElementById('lp-topic').value || 'Water Cycle';
+      const grade = document.getElementById('lp-grade').value || 'Grade 5';
+
+      const prompt = `You are ${grade} teacher Teacher Albejean I. Rosabe creating a detailed 45-minute lesson plan aligned to the Philippine DepEd K-12 curriculum.
+
+Subject: ${subject}
+Topic: ${topic}
+Grade: ${grade}
+
+Create a structured 45-minute lesson plan. Return ONLY valid JSON (no markdown):
+{
+  "title": "engaging lesson title",
+  "objectives": ["objective 1", "objective 2", "objective 3"],
+  "materials": ["material 1", "material 2", "material 3"],
+  "phases": [
+    { "name": "Motivation / Hook", "duration": "5 mins", "teacher": "what teacher does", "student": "what students do" },
+    { "name": "Lesson Proper", "duration": "15 mins", "teacher": "what teacher does", "student": "what students do" },
+    { "name": "Guided Practice", "duration": "15 mins", "teacher": "what teacher does", "student": "what students do" },
+    { "name": "Assessment / Closure", "duration": "10 mins", "teacher": "what teacher does", "student": "what students do" }
+  ],
+  "assignment": "brief homework or follow-up activity"
+}`;
+
+      const btn = document.querySelector('button[onclick="generateLessonPlanWithAI()"]');
+      const result = await callGeminiAI(prompt, btn, 'AI generating lesson plan...');
+      if (!result) return;
+
+      try {
+        const clean = result.replace(/```json/g,'').replace(/```/g,'').trim();
+        const plan = JSON.parse(clean);
+
+        const titleEl = document.getElementById('lp-title-display');
+        const subjEl = document.getElementById('lp-subject-display');
+        const gradeEl = document.getElementById('lp-grade-display');
+        if (titleEl) titleEl.innerText = plan.title || topic;
+        if (subjEl) subjEl.innerText = subject;
+        if (gradeEl) gradeEl.innerText = grade;
+
+        // Fill objectives
+        const objEl = document.getElementById('lp-objectives');
+        if (objEl && plan.objectives) objEl.innerHTML = plan.objectives.map(o => `<li>${o}</li>`).join('');
+
+        // Fill materials
+        const matEl = document.getElementById('lp-materials');
+        if (matEl && plan.materials) matEl.innerHTML = plan.materials.map(m => `<li>${m}</li>`).join('');
+
+        // Fill timetable phases
+        if (plan.phases) {
+          plan.phases.forEach((phase, i) => {
+            const nameEl = document.getElementById(`phase-name-${i}`);
+            const durEl = document.getElementById(`phase-dur-${i}`);
+            const teachEl = document.getElementById(`phase-teacher-${i}`);
+            const studEl = document.getElementById(`phase-student-${i}`);
+            if (nameEl) nameEl.innerText = phase.name;
+            if (durEl) durEl.innerText = phase.duration;
+            if (teachEl) teachEl.innerText = phase.teacher;
+            if (studEl) studEl.innerText = phase.student;
+          });
+        }
+
+        // Fill assignment
+        const assignEl = document.getElementById('lp-assignment');
+        if (assignEl && plan.assignment) assignEl.innerText = plan.assignment;
+
+        alert(`✅ AI generated a complete 45-min lesson plan for "${topic}"!\n\nClick any cell to edit it.`);
+      } catch(e) {
+        // If JSON parse fails, just put raw text into title area
+        const titleEl = document.getElementById('lp-title-display');
+        if (titleEl) titleEl.innerText = topic + ' — 45-Min Lesson Plan';
+        alert('AI generated the plan but could not auto-fill all fields. Copy the content manually:\n\n' + result.substring(0, 500));
+      }
+    }
+
+    // ==========================================
+    // AI: PARENT COMMUNICATION GENERATOR
+    // ==========================================
+    async function generateCommunicationWithAI() {
+      const student = document.getElementById('comm-student').value || 'the student';
+      const parent = document.getElementById('comm-parent').value || 'the parent';
+      const msgType = document.getElementById('comm-type') ? document.getElementById('comm-type').value : 'progress';
+      const notes = document.getElementById('comm-notes').value || 'shows curiosity and effort in class';
+
+      const prompt = `You are Grade 5 teacher Teacher Albejean I. Rosabe writing a parent communication email.
+
+Student: ${student}
+Parent: ${parent}
+Observations / Context: ${notes}
+
+Write a warm, professional parent email. Return ONLY valid JSON (no markdown):
+{
+  "subject": "engaging email subject line",
+  "body": "full email body with proper paragraphs, greeting, and sign-off. Sign as Teacher Albejean I. Rosabe."
+}
+
+Requirements:
+- Warm and positive tone
+- 3-4 paragraphs
+- Start with a genuine positive observation
+- Include specific actionable advice for parents
+- End with invitation to communicate further
+- Use the student's first name throughout`;
+
+      const btn = document.querySelector('button[onclick="generateCommunicationWithAI()"]');
+      const result = await callGeminiAI(prompt, btn, 'AI composing email...');
+      if (!result) return;
+
+      try {
+        const clean = result.replace(/```json/g,'').replace(/```/g,'').trim();
+        const comm = JSON.parse(clean);
+        const subjEl = document.getElementById('comm-subject');
+        const bodyEl = document.getElementById('comm-body');
+        if (subjEl && comm.subject) subjEl.value = comm.subject;
+        if (bodyEl && comm.body) bodyEl.value = comm.body;
+        alert(`✅ AI composed a parent email for ${student}!\n\nReview and edit it, then click "Copy to Clipboard".`);
+      } catch(e) {
+        const bodyEl = document.getElementById('comm-body');
+        if (bodyEl) bodyEl.value = result;
+        alert(`✅ AI composed the email! Review and edit as needed.`);
+      }
+    }
+
+    function exportBackupJSON() {
+      const backupData = {
+        app: 'Rosabe AI Assistant - Teacher Suite',
+        educator: 'Teacher Albejean I. Rosabe',
+        version: '1.0',
+        exportedAt: new Date().toISOString(),
+        studentComments: studentComments,
+        lessonPlan: {
+          title: document.getElementById('lp-title-display') ? document.getElementById('lp-title-display').innerText : '',
+          subject: document.getElementById('lp-subject-display') ? document.getElementById('lp-subject-display').innerText : '',
+          grade: document.getElementById('lp-grade-display') ? document.getElementById('lp-grade-display').innerText : '',
+        },
+        communication: {
+          student: document.getElementById('comm-student') ? document.getElementById('comm-student').value : '',
+          parent: document.getElementById('comm-parent') ? document.getElementById('comm-parent').value : '',
+          subject: document.getElementById('comm-subject') ? document.getElementById('comm-subject').value : '',
+          body: document.getElementById('comm-body') ? document.getElementById('comm-body').value : ''
+        }
+      };
+
+      const jsonStr = JSON.stringify(backupData, null, 2);
+      const dateStr = new Date().toISOString().split('T')[0];
+      downloadFile(jsonStr, `Teacher_Albejean_Backup_${dateStr}.json`, 'application/json;charset=utf-8;');
+    }
+
+    function restoreBackupJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const data = JSON.parse(evt.target.result);
+          if (Array.isArray(data.studentComments)) {
+            studentComments = data.studentComments;
+            localStorage.setItem('rosabe_backup_students', JSON.stringify(studentComments));
+            renderStudents();
+          }
+
+          if (data.lessonPlan) {
+            if (data.lessonPlan.title && document.getElementById('lp-title-display')) {
+              document.getElementById('lp-title-display').innerText = data.lessonPlan.title;
+            }
+            if (data.lessonPlan.subject && document.getElementById('lp-subject-display')) {
+              document.getElementById('lp-subject-display').innerText = data.lessonPlan.subject;
+            }
+            if (data.lessonPlan.grade && document.getElementById('lp-grade-display')) {
+              document.getElementById('lp-grade-display').innerText = data.lessonPlan.grade;
+            }
+          }
+
+          if (data.communication) {
+            if (data.communication.student && document.getElementById('comm-student')) {
+              document.getElementById('comm-student').value = data.communication.student;
+            }
+            if (data.communication.parent && document.getElementById('comm-parent')) {
+              document.getElementById('comm-parent').value = data.communication.parent;
+            }
+            if (data.communication.subject && document.getElementById('comm-subject')) {
+              document.getElementById('comm-subject').value = data.communication.subject;
+            }
+            if (data.communication.body && document.getElementById('comm-body')) {
+              document.getElementById('comm-body').value = data.communication.body;
+            }
+          }
+
+          alert(`Backup restored successfully! Loaded ${studentComments.length} student records and teaching resources.`);
+          refreshIcons();
+        } catch(err) {
+          alert('Invalid JSON backup file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+    }
+
+    function downloadFile(content, filename, mime) {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+
+    // ==========================================
+    // MODULE 6: QUIZ & TEST BUILDER
+    // ==========================================
+    let showQuizAnswers = false;
+    let quizQuestions = [
+      { id:'q-1', type:'mcq', question:'Which organelle inside plant cells contains chlorophyll and carries out photosynthesis?', options:['A) Mitochondria','B) Chloroplast','C) Nucleus','D) Cell Wall'], answer:'B) Chloroplast', rationale:'Chloroplasts contain chlorophyll, the green pigment that absorbs sunlight for photosynthesis.', points:4 },
+      { id:'q-2', type:'mcq', question:'What essential gas do plants release into the atmosphere as a byproduct of photosynthesis?', options:['A) Carbon Dioxide','B) Nitrogen','C) Oxygen','D) Hydrogen'], answer:'C) Oxygen', rationale:'During photosynthesis, plants take in carbon dioxide and release oxygen.', points:4 },
+      { id:'q-3', type:'fill', question:'Organisms that break down dead plants and animals and return nutrients to the soil are called ______________.', answer:'Decomposers (fungi and bacteria)', rationale:'Decomposers recycle matter back into the ecosystem.', points:4 },
+      { id:'q-4', type:'fill', question:'Plants convert sunlight, water, and carbon dioxide into a sugar called ______________ for food.', answer:'Glucose', rationale:'Glucose is the simple sugar used by plants for cellular energy.', points:4 },
+      { id:'q-5', type:'short', question:'Explain why herbivores and carnivores depend on photosynthesis, even though they cannot perform it themselves.', answer:'Herbivores eat plants to gain energy from photosynthesis. Carnivores eat herbivores. Without photosynthesis, the food web collapses.', rationale:'Expect students to explain energy transfer through trophic levels.', points:4 }
+    ];
+    function renderQuiz() {
+      const container = document.getElementById('quiz-questions-list');
+      if (!container) return;
+      container.innerHTML = '';
+      let total = 0;
+      quizQuestions.forEach((q, idx) => {
+        total += q.points;
+        const qDiv = document.createElement('div');
+        qDiv.className = 'p-5 rounded-xl border border-slate-200 bg-slate-50/40 hover:bg-slate-50 transition-all space-y-3';
+        let typeBadge = '<span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">Multiple Choice</span>';
+        if (q.type === 'fill') typeBadge = '<span class="px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800">Fill-in-the-Blank</span>';
+        if (q.type === 'short') typeBadge = '<span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-100 text-purple-800">Short Answer</span>';
+        let innerContent = '';
+        if (q.type === 'mcq') {
+          innerContent = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">${q.options.map((opt, oIdx) => `<div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-center gap-2"><span class="w-4 h-4 rounded-full border-2 border-slate-400 shrink-0"></span><span contenteditable="true" oninput="quizQuestions[${idx}].options[${oIdx}]=this.innerText" class="editable-cell p-0.5 flex-1 focus:outline-none">${opt}</span></div>`).join('')}</div>`;
+        } else if (q.type === 'fill') {
+          innerContent = `<div class="pt-2"><div class="p-3 bg-white rounded-lg border border-dashed border-slate-300 text-xs text-slate-400 font-mono">Write answer here: __________________________________________________</div></div>`;
+        } else {
+          innerContent = `<div class="pt-2"><div class="h-16 bg-white rounded-lg border border-slate-200 p-2 text-xs text-slate-300">[Student lines for written response]</div></div>`;
+        }
+        const answerKeyBox = showQuizAnswers ? `<div class="p-3 rounded-lg bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 space-y-1 mt-2"><div class="font-bold flex items-center gap-1">✓ Answer: <span contenteditable="true" oninput="quizQuestions[${idx}].answer=this.innerText" class="editable-cell px-1 rounded bg-white/70">${q.answer}</span></div><div class="text-emerald-800"><em>Rationale:</em> <span contenteditable="true" oninput="quizQuestions[${idx}].rationale=this.innerText" class="editable-cell">${q.rationale}</span></div></div>` : '';
+        qDiv.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center gap-2"><span class="font-extrabold text-slate-900 text-sm">Q${idx+1}.</span>${typeBadge}</div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-400 font-mono">(${q.points} pts)</span>
+              <button onclick="deleteQuizQuestion(${idx})" class="text-slate-400 hover:text-rose-600 p-1 no-print" title="Delete"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+          <div contenteditable="true" oninput="quizQuestions[${idx}].question=this.innerText" class="editable-cell text-xs sm:text-sm font-semibold text-slate-900 leading-relaxed p-1 rounded-lg focus:outline-none">${q.question}</div>
+          ${innerContent}${answerKeyBox}`;
+        container.appendChild(qDiv);
+      });
+      const pts = document.getElementById('qz-total-pts');
+      if (pts) pts.innerText = total;
+      refreshIcons();
+    }
+
+    function toggleQuizAnswerKey() {
+      showQuizAnswers = !showQuizAnswers;
+      const txt = document.getElementById('key-btn-text');
+      if (txt) txt.innerText = showQuizAnswers ? 'Hide Answer Key' : 'Show Answer Key';
+      renderQuiz();
+    }
+
+    function deleteQuizQuestion(idx) {
+      quizQuestions.splice(idx, 1);
+      renderQuiz();
+    }
+
+    function addNewQuizQuestion() {
+      quizQuestions.push({ id:'q-'+Date.now(), type:'mcq', question:'Click here to type your question...', options:['A) Option one','B) Option two','C) Option three','D) Option four'], answer:'A) Option one', rationale:'Teacher explanation here', points:4 });
+      renderQuiz();
+    }
+
+    // ==========================================
+    // GEMINI AI KEY MANAGEMENT
+    // ==========================================
+    function saveGeminiKey() {
+      const key = document.getElementById('gemini-api-key').value.trim();
+      if (key.includes('●') || key === '') { alert('Please paste your actual API key first.'); return; }
+      if (key.length < 15) {
+        alert('Please paste a valid API key from Google AI Studio.');
+        return;
+      }
+      localStorage.setItem('rosabe_gemini_key', key);
+      updateAIKeyStatus();
+      alert('✅ Gemini API key saved! Now you can generate content with AI across all modules.');
+    }
+
+    function clearGeminiKey() {
+      localStorage.removeItem('rosabe_gemini_key');
+      document.getElementById('gemini-api-key').value = '';
+      updateAIKeyStatus();
+    }
+
+    function updateAIKeyStatus() {
+      const key = localStorage.getItem('rosabe_gemini_key');
+      const statusEl = document.getElementById('ai-key-status');
+      const badgeEl = document.getElementById('ai-mode-badge');
+      const btnLabel = document.getElementById('ai-btn-label');
+      if (key) {
+        if (statusEl) statusEl.innerHTML = '✅ <strong class="text-amber-300">Gemini AI key active!</strong> Type any topic and click "Generate with AI" — no text needed.';
+        if (badgeEl) { badgeEl.textContent = '🤖 AI Mode Active'; badgeEl.className = 'px-2 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800'; }
+        if (btnLabel) btnLabel.textContent = 'Generate with Gemini AI ✨';
+        const keyInput = document.getElementById('gemini-api-key');
+        if (keyInput) keyInput.value = '●●●●●●●●●●●●●●●● (saved)';
+      } else {
+        if (statusEl) statusEl.textContent = 'No key saved — using template mode. With a key, AI generates real Grade 5 questions on any topic.';
+        if (badgeEl) { badgeEl.textContent = 'Template Mode'; badgeEl.className = 'px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500'; }
+        if (btnLabel) btnLabel.textContent = 'Generate with AI (Gemini)';
+      }
+    }
+
+    // ==========================================
+    // GEMINI AI QUIZ GENERATOR
+    // ==========================================
+    async function generateQuizWithAI() {
+      const apiKey = localStorage.getItem('rosabe_gemini_key');
+      if (!apiKey) {
+        const proceed = confirm('No Gemini API key saved.\n\nClick OK to use Template Mode instead, or Cancel to first save your free API key at the top of this page.\n\nGet a free key at: aistudio.google.com');
+        if (proceed) generateQuizFromText();
+        return;
+      }
+
+      const title = document.getElementById('qz-title-input').value || 'Grade 5 Assessment';
+      const topic = document.getElementById('qz-topic-input').value.trim();
+      const extraText = document.getElementById('qz-source-text').value.trim();
+      const type = document.getElementById('qz-type-select').value;
+      const count = parseInt(document.getElementById('qz-count-select').value);
+
+      if (!topic && !extraText) {
+        alert('Please type a topic (e.g. "Water Cycle") in the Topic field, or paste some text.');
+        return;
+      }
+
+      const typeDesc = { mixed:'a mix of Multiple-Choice, Fill-in-the-Blank, and Short-Answer', mcq:'Multiple-Choice only (4 options each: A B C D)', fill:'Fill-in-the-Blank only', short:'Short-Answer only (2-3 sentences expected)' }[type];
+
+      const prompt = `You are an expert Grade 5 teacher in the Philippines creating a ${count}-question assessment.
+Topic: "${topic || 'based on the text below'}"
+${extraText ? `Reference text:\n${extraText}\n` : ''}
+Question types: ${typeDesc}
+Grade level: Grade 5, age 10-11, align to DepEd K-12 curriculum
+
+Generate exactly ${count} questions. Return ONLY valid JSON array, no markdown, no explanation:
+[
+  {
+    "type": "mcq",
+    "question": "...",
+    "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
+    "answer": "A) correct option text",
+    "rationale": "brief teacher explanation",
+    "points": 4
+  }
+]
+For fill type omit options. For short type omit options.`;
+
+      const btn = document.getElementById('btn-ai-generate');
+      const origHTML = btn.innerHTML;
+      btn.innerHTML = '<svg class="animate-spin w-4 h-4 mr-1 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle><path class="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z"></path></svg> Generating with Gemini AI...';
+      btn.disabled = true;
+
+      try {
+        const result = await requestGeminiApi(prompt, 2048);
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+
+        let raw = result.text || '';
+        raw = raw.replace(/```json/g,'').replace(/```/g,'').trim();
+        const parsed = JSON.parse(raw);
+
+        quizQuestions = parsed.map((q, i) => ({
+          id: 'q-ai-' + i,
+          type: q.type || 'mcq',
+          question: q.question,
+          options: q.options || ['A) —','B) —','C) —','D) —'],
+          answer: q.answer || '',
+          rationale: q.rationale || '',
+          points: q.points || 4
+        }));
+
+        const disp = document.getElementById('qz-title-display');
+        if (disp) disp.innerText = title;
+        renderQuiz();
+        alert(`✅ Gemini AI created ${quizQuestions.length} real Grade 5 questions about "${topic || 'the topic'}"!\n\nClick any question text or option to edit it.\nClick "Show Answer Key" to see answers.`);
+
+      } catch (err) {
+        console.error(err);
+        alert('❌ AI Error: ' + err.message + '\n\nPossible fixes:\n• Check your API key is correct\n• Check your internet connection\n• Try "Template Mode" button instead');
+      } finally {
+        btn.innerHTML = origHTML;
+        btn.disabled = false;
+        refreshIcons();
+      }
+    }
+
+    function generateQuizFromText() {
+      const title = document.getElementById('qz-title-input').value;
+      const topic = document.getElementById('qz-topic-input') ? document.getElementById('qz-topic-input').value : '';
+      const text = document.getElementById('qz-source-text').value || topic || 'concept';
+      const type = document.getElementById('qz-type-select').value;
+      const count = parseInt(document.getElementById('qz-count-select').value);
+      const disp = document.getElementById('qz-title-display');
+      if (disp) disp.innerText = title;
+      const words = text.split(/\s+/).filter(w => w.length > 4).map(w => w.replace(/[^a-zA-Z]/g,''));
+      const vocab = Array.from(new Set(words)).slice(0, 10);
+      const generated = [];
+      for (let i = 0; i < count; i++) {
+        const v = vocab[i % vocab.length] || 'concept';
+        const V = v.charAt(0).toUpperCase() + v.slice(1);
+        if (type === 'mcq' || (type === 'mixed' && i % 3 === 0)) {
+          generated.push({ id:'q-'+i, type:'mcq', question:`What is the role of ${V} in this topic?`, options:[`A) It is the key element described`,`B) It prevents the main process`,`C) It has no function here`,`D) It is an unrelated byproduct`], answer:`A) It is the key element described`, rationale:`${V} is central to the core concept.`, points:4 });
+        } else if (type === 'fill' || (type === 'mixed' && i % 3 === 1)) {
+          generated.push({ id:'q-'+i, type:'fill', question:`The term ______________ refers to ${V} in this lesson.`, answer:V, rationale:'Vocabulary identification.', points:4 });
+        } else {
+          generated.push({ id:'q-'+i, type:'short', question:`In 2–3 sentences, explain the importance of ${V}.`, answer:`${V} is important because it connects to the main ideas discussed.`, rationale:'Look for logical reasoning and evidence.', points:4 });
+        }
+      }
+      quizQuestions = generated;
+      renderQuiz();
+      alert('Template quiz created! Click any question or option text to edit it directly.\n\nTip: Use "Generate with AI" + a free Gemini key for real topic-based questions!');
+    }
+
+    function exportQuizWord() {
+      const titleEl = document.getElementById('qz-title-display');
+      const title = titleEl ? titleEl.innerText : 'Quiz';
+      const canvas = document.getElementById('quiz-canvas');
+      const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>${title}</title><style>body{font-family:Calibri,Arial;font-size:11pt;padding:20px;}h1{color:#6b21a8;}</style></head><body><h1>${title}</h1><p>Teacher Albejean I. Rosabe</p>${canvas ? canvas.innerHTML : ''}</body></html>`;
+      downloadFile(html, `${title.replace(/\s+/g,'_')}_Quiz.doc`, 'application/msword;charset=utf-8');
+    }
+
+    // ==========================================
+    // MODULE 7: VISUAL HELPERS & DIAGRAMS
+    // ==========================================
+    let currentDiagramType = 'cycle';
+    let currentDiagramColor = 'emerald';
+    let currentDiagramTitle = "The Water Cycle: Earth's Continuous Journey";
+
+    const colorPalettes = {
+      emerald: { main:'#059669', light:'#d1fae5', text:'#065f46', stroke:'#10b981' },
+      blue:    { main:'#2563eb', light:'#dbeafe', text:'#1e40af', stroke:'#3b82f6' },
+      purple:  { main:'#7c3aed', light:'#ede9fe', text:'#5b21b6', stroke:'#8b5cf6' },
+      amber:   { main:'#d97706', light:'#fef3c7', text:'#92400e', stroke:'#f59e0b' }
+    };
+
+    function selectDiagramType(type) {
+      currentDiagramType = type;
+      const titles = { cycle:"The Water Cycle: Earth's Continuous Journey", plot:"Narrative Plot Mountain: Story Arc Guide", venn:"Compare & Contrast: Venn Diagram Model", fractions:"Visual Fractions: Halves, Fourths & Eighths", anchor:"Teacher Albejean's Classroom Success Criteria" };
+      currentDiagramTitle = titles[type] || currentDiagramTitle;
+      const inp = document.getElementById('diag-title-input');
+      if (inp) inp.value = currentDiagramTitle;
+      renderDiagram();
+    }
+
+    function setDiagramColor(color) { currentDiagramColor = color; renderDiagram(); }
+    function updateDiagramTitle(val) { currentDiagramTitle = val; renderDiagram(); }
+
+    function renderDiagram() {
+      const container = document.getElementById('svg-render-container');
+      if (!container) return;
+      const pal = colorPalettes[currentDiagramColor] || colorPalettes.emerald;
+      const t = currentDiagramTitle;
+      let svg = '';
+
+      if (currentDiagramType === 'cycle') {
+        svg = `<svg viewBox="0 0 600 400" width="100%" height="380" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="#ffffff" rx="16"/>
+          <text x="300" y="36" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">${t}</text>
+          <text x="300" y="56" text-anchor="middle" font-size="10" fill="#64748b">Teacher Albejean I. Rosabe &#xb7; Science Visual Helper</text>
+          <circle cx="300" cy="215" r="55" fill="${pal.light}" stroke="${pal.main}" stroke-width="3"/>
+          <text x="300" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="${pal.text}">CONTINUOUS</text>
+          <text x="300" y="228" text-anchor="middle" font-size="12" font-weight="bold" fill="${pal.text}">CYCLE</text>
+          <g transform="translate(210,78)"><rect width="180" height="50" rx="10" fill="${pal.main}"/><text x="90" y="23" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1. Evaporation</text><text x="90" y="40" text-anchor="middle" font-size="10" fill="#e2e8f0">Liquid changes to vapor</text></g>
+          <g transform="translate(405,192)"><rect width="180" height="50" rx="10" fill="${pal.main}"/><text x="90" y="23" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">2. Condensation</text><text x="90" y="40" text-anchor="middle" font-size="10" fill="#e2e8f0">Vapor cools to form clouds</text></g>
+          <g transform="translate(210,292)"><rect width="180" height="50" rx="10" fill="${pal.main}"/><text x="90" y="23" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">3. Precipitation</text><text x="90" y="40" text-anchor="middle" font-size="10" fill="#e2e8f0">Rain, snow, or sleet falls</text></g>
+          <g transform="translate(15,192)"><rect width="180" height="50" rx="10" fill="${pal.main}"/><text x="90" y="23" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">4. Collection</text><text x="90" y="40" text-anchor="middle" font-size="10" fill="#e2e8f0">Water gathers in lakes &amp; seas</text></g>
+          <path d="M 384 130 Q 435 152 445 188" fill="none" stroke="${pal.stroke}" stroke-width="3" stroke-dasharray="6"/>
+          <path d="M 455 244 Q 432 282 398 297" fill="none" stroke="${pal.stroke}" stroke-width="3" stroke-dasharray="6"/>
+          <path d="M 207 310 Q 150 285 148 245" fill="none" stroke="${pal.stroke}" stroke-width="3" stroke-dasharray="6"/>
+          <path d="M 158 185 Q 178 148 212 130" fill="none" stroke="${pal.stroke}" stroke-width="3" stroke-dasharray="6"/>
+        </svg>`;
+      } else if (currentDiagramType === 'plot') {
+        svg = `<svg viewBox="0 0 620 380" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="#ffffff" rx="16"/>
+          <text x="310" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">${t}</text>
+          <text x="310" y="52" text-anchor="middle" font-size="10" fill="#64748b">Teacher Albejean I. Rosabe &#xb7; ELA Narrative Anchor Chart</text>
+          <polyline points="50,300 170,250 310,100 450,250 570,300" fill="none" stroke="${pal.main}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="310" cy="100" r="12" fill="#ef4444" stroke="#fff" stroke-width="3"/>
+          <rect x="228" y="64" width="164" height="36" rx="6" fill="#fee2e2" stroke="#ef4444"/>
+          <text x="310" y="87" text-anchor="middle" font-size="12" font-weight="bold" fill="#b91c1c">3. CLIMAX (Turning Point)</text>
+          <circle cx="170" cy="250" r="9" fill="${pal.stroke}"/>
+          <text x="162" y="225" text-anchor="end" font-size="12" font-weight="bold" fill="${pal.text}">2. Rising Action</text>
+          <text x="162" y="240" text-anchor="end" font-size="10" fill="#64748b">Conflict builds</text>
+          <circle cx="50" cy="300" r="9" fill="${pal.stroke}"/>
+          <text x="50" y="325" text-anchor="start" font-size="12" font-weight="bold" fill="#1e293b">1. Exposition / Hook</text>
+          <text x="50" y="340" text-anchor="start" font-size="10" fill="#64748b">Characters &amp; Setting</text>
+          <circle cx="450" cy="250" r="9" fill="${pal.stroke}"/>
+          <text x="460" y="225" text-anchor="start" font-size="12" font-weight="bold" fill="${pal.text}">4. Falling Action</text>
+          <text x="460" y="240" text-anchor="start" font-size="10" fill="#64748b">Tension eases</text>
+          <circle cx="570" cy="300" r="9" fill="${pal.stroke}"/>
+          <text x="570" y="325" text-anchor="end" font-size="12" font-weight="bold" fill="#1e293b">5. Resolution</text>
+          <text x="570" y="340" text-anchor="end" font-size="10" fill="#64748b">Story conclusion</text>
+        </svg>`;
+      } else if (currentDiagramType === 'venn') {
+        svg = `<svg viewBox="0 0 600 380" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="#ffffff" rx="16"/>
+          <text x="300" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">${t}</text>
+          <text x="300" y="52" text-anchor="middle" font-size="10" fill="#64748b">Teacher Albejean I. Rosabe &#xb7; Compare &amp; Contrast</text>
+          <circle cx="215" cy="215" r="135" fill="${pal.main}" fill-opacity="0.18" stroke="${pal.main}" stroke-width="3"/>
+          <circle cx="385" cy="215" r="135" fill="#3b82f6" fill-opacity="0.18" stroke="#3b82f6" stroke-width="3"/>
+          <text x="140" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="${pal.text}">Concept A Only</text>
+          <text x="140" y="200" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Unique trait 1</text>
+          <text x="140" y="220" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Unique trait 2</text>
+          <text x="140" y="240" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Specific example</text>
+          <text x="460" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e40af">Concept B Only</text>
+          <text x="460" y="200" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Distinct trait 1</text>
+          <text x="460" y="220" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Distinct trait 2</text>
+          <text x="460" y="240" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Contrasting feature</text>
+          <text x="300" y="185" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">BOTH / SHARED</text>
+          <text x="300" y="215" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Common property</text>
+          <text x="300" y="235" text-anchor="middle" font-size="11" fill="#334155">&#x2022; Shared function</text>
+        </svg>`;
+      } else if (currentDiagramType === 'fractions') {
+        svg = `<svg viewBox="0 0 600 380" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="#ffffff" rx="16"/>
+          <text x="300" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">${t}</text>
+          <text x="300" y="52" text-anchor="middle" font-size="10" fill="#64748b">Teacher Albejean I. Rosabe &#xb7; Elementary Math Models</text>
+          <g transform="translate(50,78)"><rect width="140" height="40" fill="${pal.main}" rx="6"/><text x="70" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1 Whole (1/1)</text></g>
+          <text x="50" y="135" font-size="10" fill="#64748b">1 whole bar</text>
+          <g transform="translate(220,78)"><rect width="68" height="40" fill="${pal.stroke}" rx="6"/><rect x="72" width="68" height="40" fill="${pal.light}" stroke="${pal.stroke}" rx="6"/><text x="34" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1/2</text><text x="106" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="${pal.text}">1/2</text></g>
+          <text x="220" y="135" font-size="10" fill="#64748b">2 halves</text>
+          <g transform="translate(410,78)"><rect width="30" height="40" fill="${pal.main}" rx="4"/><rect x="34" width="30" height="40" fill="${pal.light}" stroke="${pal.stroke}" rx="4"/><rect x="68" width="30" height="40" fill="${pal.light}" stroke="${pal.stroke}" rx="4"/><rect x="102" width="30" height="40" fill="${pal.light}" stroke="${pal.stroke}" rx="4"/><text x="15" y="25" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">1/4</text><text x="49" y="25" text-anchor="middle" font-size="11" fill="${pal.text}">1/4</text><text x="83" y="25" text-anchor="middle" font-size="11" fill="${pal.text}">1/4</text><text x="117" y="25" text-anchor="middle" font-size="11" fill="${pal.text}">1/4</text></g>
+          <text x="410" y="135" font-size="10" fill="#64748b">4 fourths (quarters)</text>
+          <g transform="translate(120,240)"><circle r="60" fill="${pal.light}" stroke="${pal.main}" stroke-width="3"/><path d="M 0 0 L 0 -60 A 60 60 0 0 1 60 0 Z" fill="${pal.main}"/><text x="0" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">1/4 Shaded</text></g>
+          <g transform="translate(300,240)"><circle r="60" fill="${pal.light}" stroke="${pal.main}" stroke-width="3"/><path d="M 0 0 L 0 -60 A 60 60 0 0 1 0 60 Z" fill="${pal.main}"/><text x="0" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">1/2 Shaded</text></g>
+          <g transform="translate(480,240)"><circle r="60" fill="${pal.light}" stroke="${pal.main}" stroke-width="3"/><path d="M 0 0 L 0 -60 A 60 60 0 1 1 -60 0 Z" fill="${pal.main}"/><text x="0" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">3/4 Shaded</text></g>
+        </svg>`;
+      } else if (currentDiagramType === 'anchor') {
+        svg = `<svg viewBox="0 0 600 380" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <rect width="100%" height="100%" fill="${pal.light}" rx="16"/>
+          <rect x="20" y="20" width="560" height="340" rx="14" fill="none" stroke="${pal.main}" stroke-width="4"/>
+          <rect x="40" y="30" width="520" height="70" rx="10" fill="${pal.main}"/>
+          <text x="300" y="64" text-anchor="middle" font-size="20" font-weight="bold" fill="#ffffff">${t}</text>
+          <text x="300" y="86" text-anchor="middle" font-size="11" fill="#e2e8f0">Teacher Albejean I. Rosabe &#xb7; Grade 5</text>
+          <text x="80" y="140" font-size="14" font-weight="bold" fill="${pal.text}">&#x2713; We will KNOW:</text>
+          <text x="80" y="165" font-size="12" fill="#334155">&#x2022; Key vocabulary and concepts from the lesson</text>
+          <text x="80" y="185" font-size="12" fill="#334155">&#x2022; How to apply the skill in context</text>
+          <text x="80" y="205" font-size="12" fill="#334155">&#x2022; Important facts and supporting details</text>
+          <text x="80" y="240" font-size="14" font-weight="bold" fill="${pal.text}">&#x2713; We will DO:</text>
+          <text x="80" y="265" font-size="12" fill="#334155">&#x2022; Read and analyze the learning material carefully</text>
+          <text x="80" y="285" font-size="12" fill="#334155">&#x2022; Collaborate, discuss, and share our thinking</text>
+          <text x="80" y="305" font-size="12" fill="#334155">&#x2022; Apply our learning through tasks and assessment</text>
+          <text x="300" y="348" text-anchor="middle" font-size="11" fill="${pal.text}" font-weight="bold">&#9733; I can do this! I am ready to learn! &#9733;</text>
+        </svg>`;
+      }
+
+      container.innerHTML = svg;
+    }
+
+    function downloadVisualSVG() {
+      const container = document.getElementById('svg-render-container');
+      if (!container) return;
+      const svgEl = container.querySelector('svg');
+      if (!svgEl) { alert('Please select a diagram template first.'); return; }
+      const svgData = new XMLSerializer().serializeToString(svgEl);
+      const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Rosabe_${currentDiagramType}_diagram.svg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('rosabe_backup_students');
+      if (saved) {
+        try { studentComments = JSON.parse(saved); } catch(e) {}
+      }
+      renderStudents();
+      renderQuiz();
+      renderDiagram();
+      updateAIKeyStatus();
+      refreshIcons();
+    });
+  </script>
 </body>
 </html>
